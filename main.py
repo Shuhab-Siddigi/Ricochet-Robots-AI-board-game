@@ -1,7 +1,6 @@
-import GameEngine.engine as engine
+from GameEngine import engine
 
 def main():
-    engine()
-
+    game = engine.Game()
 if __name__ == "__main__":
     main()
