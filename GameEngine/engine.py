@@ -1,26 +1,30 @@
 # Simple pygame program
+# Follow this tutorial for pygame
+# https://www.youtube.com/watch?v=ePiMYe7JpJo
 
 # Import and initialize the pygame library
 import pygame
-
 from SpriteImages.spritesheet import Spritesheet
+from Players.Player import Knuckles
 class Game:
     game = pygame
     screen = pygame.display
+    DISPLAY_HEIGHT = 600
+    DISPLAY_WIDTH  = 600
     running = False
-    
-    def __init__(self):
 
+    def __init__(self):
+        
         # Initialize game
         self.game.init()
         # Set up the drawing window
         self.screen = self.game.display.set_mode((
-                500, 
-                500
+                self.DISPLAY_HEIGHT,
+                self.DISPLAY_WIDTH
             )
         )
-        sp = Spritesheet("./CharacterSpriteSheets/Knuckles.png")
-        self.knuckles = sp.getSprite(0,0,190,190) 
+
+        knuckles = Knuckles()
         # Start the game
         self.running = True
 
@@ -35,7 +39,8 @@ class Game:
             self.screen.fill((255, 255, 255))
 
             # Add the boy!
-            self.screen.blit(self.knuckles,(0,0))
+            # self.screen.blit(self.knuckles,(0,0))
+            self.screen.blit(knuckles.LEFT,(0,0))
             self.updateAll()      
 
         # Done! Time to quit.
