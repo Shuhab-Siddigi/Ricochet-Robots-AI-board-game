@@ -14,7 +14,19 @@ class Game:
     screen = pygame.display
     DISPLAY_HEIGHT = 600
     DISPLAY_WIDTH  = 600
+    # This sets the WIDTH and HEIGHT of each grid location
+    WIDTH = 20
+    HEIGHT = 20
+    # This sets the margin between each cell
+    MARGIN = 5
     running = False
+    board = []
+    for row in range(10):
+    # Add an empty array that will hold each cell
+    # in this row
+        board.append([])
+        for column in range(10):
+            board[row].append(0)  # Append a cell
 
     def __init__(self):
         
@@ -28,16 +40,22 @@ class Game:
                 self.DISPLAY_WIDTH
             )
         )
+        # Used to manage how fast the screen updates
+        self.clock = pygame.time.Clock()
+        # Set Title
+        self.game.display.set_caption("Ricochet Robot AI Game")
+        # Set favicon
+        favicon = self.game.image.load("Icons/favicon.png")
+        self.game.display.set_icon(favicon)
         
         # Create players
         knuckles = Knuckles()
-
+        knucklesAction = knuckles.LEFT
         # Start the game
         self.running = True
         index = 0
         # Game loop
         while self.running:
-
             # Close game by presseing close icon on window
             for event in pygame.event.get():
                 # To be able to quit the game
@@ -46,21 +64,24 @@ class Game:
                 # Key Input
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        # x -= index
-                        index += 1
+                        knuckles.PosX -= 1
+                        knucklesAction = knuckles.LEFT
                     if event.key == pygame.K_RIGHT:
-                        index -= 1
-                    # if event.key == pygame.K_UP:
-                    #     y -= speed
-                    # if event.key == pygame.K_DOWN:
-                    #     y += speed
+                        knuckles.PosX += 1
+                        knucklesAction = knuckles.RIGHT
+                    if event.key == pygame.K_UP:
+                         knuckles.PosY -= 1
+                         knucklesAction = knuckles.UP
+                    if event.key == pygame.K_DOWN:
+                         knuckles.PosY += 1
+                         knucklesAction = knuckles.GLIDERIGHT
 
             # Fill the background with white
             self.screen.fill((255, 255, 255))
 
             # Add the boy!
             # self.screen.blit(self.knuckles,(0,0))
-            self.screen.blit(knuckles.TALK[index],(0,0))
+            self.screen.blit(knucklesAction,(knuckles.PosX,knuckles.PosY))
             self.updateAll()      
 
         # Done! Time to quit.
@@ -73,3 +94,4 @@ class Game:
     def updateAll(self):
         """Update Everything on the screen"""
         self.game.display.flip()
+    
