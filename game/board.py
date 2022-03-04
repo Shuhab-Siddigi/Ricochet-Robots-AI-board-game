@@ -14,26 +14,11 @@ class Board(pygame.sprite.Sprite):
         # #     SCREEN_WIDTH-BOARD_WIDTH,   # Start X position
         #     SCREEN_HEIGHT-BOARD_HEIGHT) # Start Y posistion
         pygame.draw.rect(self.image, 'Black', pygame.Rect(
-             SCREEN_WIDTH-BOARD_WIDTH,
-             SCREEN_HEIGHT-BOARD_HEIGHT,
-                10, 
-                10
-                ),  2)
-        #pygame.draw.rect(self.image, 'Black', pygame.Rect(30, 30, 60, 60),  2)
+            # SCREEN_WIDTH-BOARD_WIDTH,
+            # SCREEN_HEIGHT-BOARD_HEIGHT,
+            # BOARD_WIDTH,
+            # BOARD_HEIGHT
+            100,0,BOARD_WIDTH,BOARD_HEIGHT
+                ),  
+            0)
         self.rect = self.image.get_rect()
-    # def draw_cubes(self,surface:pygame.Surface):
-    #     surface.fill('WHITE')
-
-
-# for row in range(10):
-#         for column in range(10):
-#             color = WHITE
-#             if grid[row][column] == 1:
-#                 color = GREEN
-#             pygame.draw.rect(screen,
-#                              color,
-#                              [(MARGIN + WIDTH) * column + MARGIN,
-#                               (MARGIN + HEIGHT) * row + MARGIN,
-#                               WIDTH,
-#                               HEIGHT])
- 

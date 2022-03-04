@@ -23,8 +23,8 @@ def main():
     board = Board()
     board_group.add(board)
     
-    player = Player()
-    board_group.add(player)
+   #player = Player()
+    #board_group.add(player)
 
     def handle_events() -> None:
         """Handles all the different events in the game"""
@@ -53,7 +53,7 @@ def main():
         #wall_group.draw(screen)
     def update():
         board.update()
-        player.update()
+        #player.update()
     
     # -------- Main Program Loop -----------
     while True:
@@ -63,7 +63,6 @@ def main():
         draw()
         # Update objects
         update()
-        
         # Updates everything
         #pygame.display.flip
         pygame.display.update()
@@ -71,15 +70,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-  #board = pygame.image.load("Resources/board.svg")
-    # Instantiate objects
-    #b = pygame.sprite.Group()
-    #b.add(board(SCREEN_WIDTH,SCREEN_HEIGTH,GRIDSIZE))
-    #b = Board()
-    #p = pygame.sprite.GroupSingle()
-    #p.add(player())
-    #wall = Wall(50,50,100,100)
-
-    #wall_group = pygame.sprite.Group()
-    #wall_group.add(wall)
