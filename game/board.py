@@ -4,7 +4,7 @@ from game.constants import *
 class Board(pygame.sprite.Sprite):
 
     # wall positions
-    walls = {dict:{pygame.Rect}}
+    walls = []
 
     def __init__(self):
         super().__init__()
@@ -25,10 +25,12 @@ class Board(pygame.sprite.Sprite):
         
         def drawHorizontalRect(x,y):
             rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE-2.5, TILE_SIZE, 5)
+            self.walls.append(rect)
             pygame.draw.rect(self.image,'Black', rect)
         
         def drawVerticalRect(x,y):
             rect = pygame.Rect(x*TILE_SIZE-2.5, y*TILE_SIZE, 5, TILE_SIZE)
+            self.walls.append(rect)
             pygame.draw.rect(self.image,'Black', rect)
         # # Draw Middle square
         # # LEFT LINE

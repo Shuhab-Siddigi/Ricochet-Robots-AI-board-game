@@ -5,7 +5,7 @@ from logic import Graph
 class Player(pygame.sprite.Sprite):
     """A player object for the game """
 
-    walls = [[]]
+    walls = []
     
 
     def __init__(self):
@@ -26,36 +26,44 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom += 2
 
 
-    # def collision(self):
-    #     collision_tolerence = 3
+    def collision(self):
+        collision_tolerence = 3
+        for wall in self.walls:
+            if self.rect.colliderect(wall):
+                print("HIT")
+        # for wall in self.walls:
+        #     if abs(wall.left - self.rect.right) < collision_tolerence:
+        #         print("HIT RIGHT")
+        #     if abs(wall.left - self.rect.right) < collision_tolerence:
+        #          print("HIT")
+        #     if abs(wall.left - self.rect.left) < collision_tolerence:
+        #          print("HIT")
 
-    #     def hitLeft(wall):
-    #         if abs(wall.left - self.rect.right) < collision_tolerence:
-    #             print("HIT")
+        # def hitLeft(wall):
+        #     
         
-    #     def hitRight(wall):
-    #         if abs(wall.left - self.rect.left) < collision_tolerence:
-    #             print("HIT")
+        # def hitRight(wall):
+        #     
 
 
-    #     if self.rect.colliderect(self.walls[0][5]):
-    #         wall = self.walls[0][5]
-    #         hitLeft(wall)
-    #         hitRight(wall)
+        # if self.rect.colliderect(self.walls[0][5]):
+        #     wall = self.walls[0][5]
+        #     hitLeft(wall)
+        #     hitRight(wall)
                 
-    #     if self.rect.colliderect(self.walls[0][12]):
-    #         wall = self.walls[0][12]
-    #         hitLeft(wall)
-    #         hitRight(wall)
+        # if self.rect.colliderect(self.walls[0][12]):
+        #     wall = self.walls[0][12]
+        #     hitLeft(wall)
+        #     hitRight(wall)
     
-    #     if self.rect.colliderect(self.walls[1][7]):
-    #         wall = self.walls[1][7]
-    #         hitLeft(wall)
+        # if self.rect.colliderect(self.walls[1][7]):
+        #     wall = self.walls[1][7]
+        #     hitLeft(wall)
 
        
     def update(self):
         self.input()
-        #self.collision()
+        self.collision()
     
     def destroy(self):
         self.kill()
