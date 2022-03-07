@@ -49,16 +49,22 @@ class Player(pygame.sprite.Sprite):
         self.grid = grid
 
     def collision(self):
-        collision_tolerence = 3
+        collision_tolerence = 7
         for wall in self.walls:
-            if self.rect.colliderect(wall):
+            if self.rect.colliderect(wall): 
                 if abs(wall.left - self.rect.right) < collision_tolerence: # Moving right; Hit the left side of the wall
-                    print("HIT")
-  
+                    print("HIT LEFT")
+                if abs(wall.right - self.rect.left) < collision_tolerence:
+                    print("HIT RIGHT")
+                if abs(wall.top - self.rect.bottom) < collision_tolerence:
+                    print("HIT TOP")
+                if abs(wall.bottom - self.rect.top) < collision_tolerence:
+                    print("HIT BOTTOM")
+
     def update(self):
         self.input()
         self.collision()
-        pygame.draw.rect(self.image,'Black', self.rect)
+        pygame.draw.rect(self.image,'Black', self.rect, 2)
     
     def destroy(self):
         self.kill()
@@ -66,34 +72,3 @@ class Player(pygame.sprite.Sprite):
     def set_walls(self,walls):
         self.walls = walls    
         
-
-      # for wall in self.walls:
-        #     if abs(wall.left - self.rect.right) < collision_tolerence:
-        #         print("HIT RIGHT")
-        #     if abs(wall.left - self.rect.right) < collision_tolerence:
-        #          print("HIT")
-        #     if abs(wall.left - self.rect.left) < collision_tolerence:
-        #          print("HIT")
-
-        # def hitLeft(wall):
-        #     
-        
-        # def hitRight(wall):
-        #     
-
-
-        # if self.rect.colliderect(self.walls[0][5]):
-        #     wall = self.walls[0][5]
-        #     hitLeft(wall)
-        #     hitRight(wall)
-                
-        # if self.rect.colliderect(self.walls[0][12]):
-        #     wall = self.walls[0][12]
-        #     hitLeft(wall)
-        #     hitRight(wall)
-    
-        # if self.rect.colliderect(self.walls[1][7]):
-        #     wall = self.walls[1][7]
-        #     hitLeft(wall)
-
-       
