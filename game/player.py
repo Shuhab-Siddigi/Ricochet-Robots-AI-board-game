@@ -1,37 +1,73 @@
 import pygame
+from game.constants import COLS, ROWS, TILE_SIZE
 
 from logic import Graph
 
 class Player(pygame.sprite.Sprite):
-    """A player object for the game """
-
-    walls = []
-    
-
+    """A player object for the game """   
+   
     def __init__(self):
         super().__init__()
         
         self.image = pygame.image.load("Resources/AI.png").convert_alpha()
         self.rect = self.image.get_rect()
+        self.grid = [[]]
+        self.X = 0
+        self.Y = 0
+        
 
     def input(self):
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
-            self.rect.left -= 2
+            self.actions("LEFT")
         if key[pygame.K_RIGHT]:
-            self.rect.right += 2
+            self.actions("RIGHT")
         if key[pygame.K_UP]:
-            self.rect.top -= 2
+            self.actions("UP")
         if key[pygame.K_DOWN]:
-            self.rect.bottom += 2
+            self.actions("DOWN")
 
+    def actions(self,move:str):
+        if move == "UP":
+            if self.Y > 0:
+                self.Y -= 1
+                self.rect.center = self.grid[self.X][self.Y]
+        if move == "LEFT":
+            if self.X > 0:
+                self.X -= 1
+                self.rect.center = self.grid[self.X][self.Y]
+        if move == "DOWN":
+            if self.Y < ROWS-1:
+                self.Y += 1
+                self.rect.center = self.grid[self.X][self.Y]
+        if move == "RIGHT":
+            if self.X < COLS-1:
+                self.X += 1
+                self.rect.center = self.grid[self.X][self.Y]
+
+    def addGrid(self,grid):
+        self.grid = grid
 
     def collision(self):
         collision_tolerence = 3
         for wall in self.walls:
             if self.rect.colliderect(wall):
-                print("HIT")
-        # for wall in self.walls:
+                if abs(wall.left - self.rect.right) < collision_tolerence: # Moving right; Hit the left side of the wall
+                    print("HIT")
+  
+    def update(self):
+        self.input()
+        self.collision()
+        pygame.draw.rect(self.image,'Black', self.rect)
+    
+    def destroy(self):
+        self.kill()
+   
+    def set_walls(self,walls):
+        self.walls = walls    
+        
+
+      # for wall in self.walls:
         #     if abs(wall.left - self.rect.right) < collision_tolerence:
         #         print("HIT RIGHT")
         #     if abs(wall.left - self.rect.right) < collision_tolerence:
@@ -61,20 +97,3 @@ class Player(pygame.sprite.Sprite):
         #     hitLeft(wall)
 
        
-    def update(self):
-        self.input()
-        self.collision()
-    
-    def destroy(self):
-        self.kill()
-           
-            #print("player",self.rect.right)
-            #print("box",self.myrect.left)
-                
-   
-    def set_walls(self,walls):
-        self.walls = walls    
-        
-
-
-        

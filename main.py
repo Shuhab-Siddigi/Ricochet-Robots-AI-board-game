@@ -5,6 +5,7 @@ from game.constants import *
 from game.player import Player
 from logic import Graph
 
+
 def main():
     """ Ricochet Robot AI board game """
     pygame.init() # Initialize pygame 
@@ -24,8 +25,8 @@ def main():
     board_group = pygame.sprite.Group()
     board = Board()
     board_group.add(board)
-    
     player = Player()
+    player.addGrid(board.grid)
     player.set_walls(board.walls)
     board_group.add(player)
     
@@ -48,6 +49,7 @@ def main():
         # Draw board Group
         screen.blit(surface,(0,0))
         board_group.draw(screen)
+
  
     # -------- Main Program Loop -----------
     while True:
@@ -60,7 +62,7 @@ def main():
         # Updates everything
         #pygame.display.flip
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 if __name__ == "__main__":
     main()
