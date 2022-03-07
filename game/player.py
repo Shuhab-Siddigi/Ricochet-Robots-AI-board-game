@@ -97,7 +97,7 @@ class Player(pygame.sprite.Sprite):
         #self.image = pygame.Surface(SCREEN_SIZE) # screen surface
         #self.image.set_alpha(0)
         self.image.fill((255,255,255))
-        self.rect = self.image.get_rect()
+        self.rect =  pygame.Rect(TILE_SIZE, TILE_SIZE, TILE_SIZE, TILE_SIZE)
 
         #image = pygame.image.load("Resources/AI.png").convert_alpha()
         

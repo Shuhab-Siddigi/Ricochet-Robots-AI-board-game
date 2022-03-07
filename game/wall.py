@@ -1,36 +1,66 @@
 
 import pygame
 from game.constants import *
-class Wall(pygame.sprite.Sprite):
+class VerticalWall(pygame.sprite.Sprite):
 
-    def __init__(self,start_x,start_y,end_x,end_y):
+    def __init__(self,x,y):
         super().__init__()
         
-        self.image = pygame.Surface((16*TILE_SIZE, 16*TILE_SIZE))
-        self.image.fill((255, 255, 255))
-        self.rect = self.image.get_rect()
+        self.image = pygame.Surface((5, TILE_SIZE))
+        self.rect = pygame.Rect(x*TILE_SIZE-2.5, y*TILE_SIZE, 5, TILE_SIZE)
+        pygame.draw.rect(self.image,'Black', self.rect)
+ 
+class HorizontalWall(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        super().__init__()
+        self.image = pygame.Surface((TILE_SIZE, 5))
+        self.rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE-2.5, TILE_SIZE, 5)
+        pygame.draw.rect(self.image,'Black', self.rect)
+
+class WallGroup(pygame.sprite.Group):
+    def __init__(self):
+        super().__init__()
         
-        # GRID    
-        for x in range(16):
-            for y in range(16):
-                rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(self.image, (128, 128, 128), rect, 1)
-    
-    #   pygame.draw.line(surface, RGB, FROM (x,y), TO (x,y), thickness)
-        # LEFT LINE
-        pygame.draw.line(self.image, (0, 0, 0), (7*TILE_SIZE, 7*TILE_SIZE), (7*TILE_SIZE, 9*TILE_SIZE), 5)
-        # BOTTOM LINE
-        pygame.draw.line(self.image, (0, 0, 0), (7*TILE_SIZE, 9*TILE_SIZE), (9*TILE_SIZE, 9*TILE_SIZE), 5)
-        # RIGHT LINE
-        pygame.draw.line(self.image, (0, 0, 0), (9*TILE_SIZE, 9*TILE_SIZE), (9*TILE_SIZE, 7*TILE_SIZE), 5)
-        # TOP LINE
-        pygame.draw.line(self.image, (0, 0, 0), (7*TILE_SIZE, 7*TILE_SIZE), (9*TILE_SIZE, 7*TILE_SIZE), 5)
-
-    # WALL START TOP LEFT CORNER -> 
-        # 5,0
-        pygame.draw.line(self.image, (0, 0, 0), (5*TILE_SIZE, 0*TILE_SIZE), (5*TILE_SIZE, 1*TILE_SIZE), 5)
-        # 12,0
-        pygame.draw.line(self.image, (0, 0, 0), (12*TILE_SIZE, 0*TILE_SIZE), (12*TILE_SIZE, 1*TILE_SIZE), 5)
-
-    # Rect around the board
-        pygame.draw.rect(self.image, (0, 0, 0), self.rect, 5)
+        # # WALL START TOP LEFT CORNER -> 
+        self.add(VerticalWall(5,0))
+        self.add(VerticalWall(13,0))
+        self.add(HorizontalWall(14,1))
+        self.add(VerticalWall(14,1))
+        self.add(VerticalWall(7,1))
+        self.add(HorizontalWall(6,2))
+        self.add(HorizontalWall(1,2))
+        self.add(VerticalWall(1,2))
+        self.add(VerticalWall(10,2))
+        self.add(HorizontalWall(9,3))
+        self.add(HorizontalWall(15,4))
+        self.add(HorizontalWall(6,5))
+        self.add(VerticalWall(7,5))
+        self.add(VerticalWall(14,5))
+        self.add(HorizontalWall(0,6))  
+        self.add(HorizontalWall(11,6))     
+        self.add(HorizontalWall(14,6))
+        self.add(VerticalWall(3,6))
+        self.add(VerticalWall(12,6))
+        self.add(HorizontalWall(3,7))
+        self.add(HorizontalWall(5,8))
+        self.add(VerticalWall(6,8))
+        self.add(VerticalWall(2,9))
+        self.add(HorizontalWall(1,10))
+        self.add(HorizontalWall(15,10))
+        self.add(VerticalWall(4,10))
+        self.add(VerticalWall(9,10))
+        self.add(HorizontalWall(4,11))
+        self.add(HorizontalWall(8,11))
+        self.add(HorizontalWall(13,11))
+        self.add(VerticalWall(13,11))
+        self.add(HorizontalWall(0,12))
+        self.add(HorizontalWall(5,13))
+        self.add(VerticalWall(6,13))
+        self.add(VerticalWall(9,13))
+        self.add(HorizontalWall(3,14))
+        self.add(HorizontalWall(9,14))
+        self.add(HorizontalWall(14,14))
+        self.add(VerticalWall(3,14))
+        self.add(VerticalWall(15,14))
+        self.add(VerticalWall(7,15))
+        self.add(VerticalWall(12,15))

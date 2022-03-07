@@ -3,6 +3,7 @@ import sys
 from game.board import Board
 from game.constants import *
 from game.player import Player
+from game.wall import WallGroup
 from logic import Graph
 
 
@@ -29,6 +30,8 @@ def main():
     player.addGrid(board.grid)
     player.set_walls(board.walls)
     board_group.add(player)
+    wall_group = WallGroup()
+    
     
     
 
@@ -39,7 +42,11 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-    
+        walls = pygame.sprite.spritecollide(player,wall_group,False)
+        for wall in walls:
+            print(wall.rect)
+        #     print("HIT")
+        
     #def update():
         #if player.rect.colliderect(rect):
             #print("HIT")
@@ -49,6 +56,7 @@ def main():
         # Draw board Group
         screen.blit(surface,(0,0))
         board_group.draw(screen)
+        wall_group.draw(screen)
 
  
     # -------- Main Program Loop -----------
