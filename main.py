@@ -28,7 +28,7 @@ def main():
     board_group.add(board)
     player = Player()
     player.addGrid(board.grid)
-    player.set_walls(board.walls)
+#    player.set_walls(board.walls)
     board_group.add(player)
     wall_group = WallGroup()
     
@@ -38,16 +38,14 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+        # if pygame.sprite.spritecollideany(player,wall_group):
+        #     print("HIT")
         if pygame.sprite.spritecollideany(player,wall_group):
-            print("HIT")
-    
+            walls = pygame.sprite.spritecollide(player,wall_group,False)
+            player.collision(walls)
     # def collision() -> None:
-    #     for wall in pygame.sprite.spritecollide(player,wall_group,False):
-    #         player.isCollision(wall)
-    
-    #def update():
-        #if player.rect.colliderect(rect):
-            #print("HIT")
+    #    
+
 
     def draw() -> None:
         """Draws objects on the screen"""
@@ -63,9 +61,9 @@ def main():
         handle_events()
         # Draw on screen
         draw()
-        #collision()
         # Update objects
         player.update()
+
         # Updates everything
         #pygame.display.flip
         pygame.display.update()

@@ -10,7 +10,7 @@ class Board(pygame.sprite.Sprite):
         super().__init__()
         
         self.image = pygame.Surface((16*TILE_SIZE, 16*TILE_SIZE))
-        self.image.fill((255, 255, 255))
+        self.image.fill('White')
         self.rect = self.image.get_rect()
         self.grid = []
         

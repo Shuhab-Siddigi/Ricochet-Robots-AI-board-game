@@ -10,15 +10,13 @@ class Player(pygame.sprite.Sprite):
         #self.image = pygame.Surface(SCREEN_SIZE) # screen surface
         #self.image.set_alpha(0)
         self.image.fill('White')
-        self.rect =  pygame.Rect(0, TILE_SIZE*15, TILE_SIZE, TILE_SIZE)
+        self.rect =  pygame.Rect(0, TILE_SIZE*0, TILE_SIZE, TILE_SIZE)
         # animation
         # Load spritesheet
         image = pygame.image.load("Resources/playersheet.jpg").convert_alpha()
         
         self.actions = ["UP","DOWN","LEFT","RIGHT"]
         self.move = "LEFT"
-        self.isCollision = False
-        self.collisionObjects = []
         # Move animation lists
         self.animations = []
         for x in range(9):
@@ -67,8 +65,6 @@ class Player(pygame.sprite.Sprite):
     def addGrid(self,grid):
         self.grid = grid
 
-
-
     def update(self):
         self.input()
         #self.collision()
@@ -77,26 +73,16 @@ class Player(pygame.sprite.Sprite):
     def destroy(self):
         self.kill()
    
-    def set_walls(self,walls):
-        self.walls = walls    
-        
-    
-
-
-    #  def collision(self):
-    #     collision_tolerence = 0
-    #     # if self.isCollision:
-    #     #     print("HIT")
-        
-    #     # for wall in self.walls:
-    #     #     if self.rect.colliderect(wall): 
-    #     #         if abs(wall.left - self.rect.right) < collision_tolerence: # Moving right; Hit the left side of the wall
-    #     #             print("HIT RIGHT")
-    #     #         if abs(self.rect.left - wall.right) < collision_tolerence:
-    #     #             print("HIT LEFT")
-    #     #         if abs(wall.top - self.rect.bottom) < collision_tolerence:
-    #     #             print("HIT BOTTOM")
-    #     #         if abs(wall.bottom - self.rect.top) < collision_tolerence:
-    #     #             print("HIT TOP")
-    #     #     if self.isCollision():
-    #     #         print("Hit")
+    def collision(self,walls:list[pygame.sprite.Sprite]):
+        print("Hit")
+        collision_tolerence = 5
+        for wall in walls:
+            if self.rect.colliderect(wall): 
+                if abs(wall.rect.left - self.rect.right) < collision_tolerence: # Moving right; Hit the left side of the wall
+                    print("HIT RIGHT")
+                if abs(wall.rect.right - self.rect.left) < collision_tolerence:
+                    print("HIT LEFT")
+                if abs(wall.rect.top - self.rect.bottom) < collision_tolerence:
+                    print("HIT BOTTOM")
+                if abs(wall.rect.bottom - self.rect.top) < collision_tolerence:
+                    print("HIT TOP")
