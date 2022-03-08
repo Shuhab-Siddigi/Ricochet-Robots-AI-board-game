@@ -6,25 +6,22 @@ class VerticalWall(pygame.sprite.Sprite):
         super().__init__()
         
         self.image = pygame.Surface((5, TILE_SIZE))
-        self.rect = pygame.Rect(x*TILE_SIZE-2.5, y*TILE_SIZE, 5, TILE_SIZE)
+        self.rect = pygame.Rect(x*TILE_SIZE-2.5, y*TILE_SIZE, MARGIN, TILE_SIZE)
         pygame.draw.rect(self.image,'Black', self.rect)
  
 class HorizontalWall(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
         self.image = pygame.Surface((TILE_SIZE, 5))
-        self.rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE-2.5, TILE_SIZE, 5)
+        self.rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE-2.5, TILE_SIZE, MARGIN)
         pygame.draw.rect(self.image,'Black', self.rect)
 
 class MiddleSquare(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()  
-        self.image = pygame.Surface((TILE_SIZE*2, TILE_SIZE*2))
-        self.rect = pygame.Rect(7*TILE_SIZE, 7*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2)
-        pygame.draw.rect(self.image,'Black', self.rect)
         image = pygame.image.load("Resources/DTU-logo.jpg").convert_alpha()
-        image = pygame.transform.scale(image, self.image.get_size())
-        self.image.blit(image,(0,0))
+        self.image = pygame.transform.scale(image, (TILE_SIZE*2, TILE_SIZE*2))
+        self.rect = pygame.Rect(7*TILE_SIZE, 7*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2)
         
 class WallGroup(pygame.sprite.Group):
     def __init__(self):

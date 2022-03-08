@@ -1,11 +1,8 @@
 import pygame
 import sys
-from game.board import Board
 from game.constants import *
 from game.player import Player
-from game.wall import WallGroup
-from logic import Graph
-
+from game.wall import MiddleSquare, WallGroup
 
 def main():
     """ Ricochet Robot AI board game """
@@ -15,6 +12,7 @@ def main():
     surface = pygame.Surface(screen.get_size()) # screen surface
     surface = surface.convert() # Convert it to a pygame object
     surface.fill('White') # Fill the first canvas white
+    rect = surface.get_rect()
 
     pygame.display.set_caption("  Ricochet Robot AI board game Group 13") # Set title of screen
     pygame.display.set_icon( # Set the left corner icon
@@ -22,39 +20,38 @@ def main():
     )
 
     clock = pygame.time.Clock() # Used to manage how fast the screen updates
-    # Create Game Sprites 
-    board_group = pygame.sprite.Group()
-    board = Board()
-    board_group.add(board)
+    # Create Game Sprites     
+    player_group = pygame.sprite.Group()
     player = Player()
-    player.addGrid(board.grid)
-#    player.set_walls(board.walls)
-    board_group.add(player)
+    player_group.add(player)
     wall_group = WallGroup()
-    
+
+
     def handle_events() -> None:
         """Handles all the different events in the game"""
         for event in pygame.event.get():  # All user events
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        # if pygame.sprite.spritecollideany(player,wall_group):
-        #     print("HIT")
-        if pygame.sprite.spritecollideany(player,wall_group):
-            walls = pygame.sprite.spritecollide(player,wall_group,False)
-            player.collision(walls)
-    # def collision() -> None:
-    #    
-
+        for wall in wall_group:
+            player.collision(wall)
+        # player.collision(
+        #     pygame.sprite.spritecollide(player,wall_group,False)
+        # )
 
     def draw() -> None:
-        """Draws objects on the screen"""
-        # Draw board Group
+        """Draws objects on the screen"""        
         screen.blit(surface,(0,0))
-        board_group.draw(screen)
-        wall_group.draw(screen)
+        # Draw board Grid   
+        for x in range(16):
+            for y in range(16):
+                rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                pygame.draw.rect(surface, (120, 120, 120), rect, 1)
 
- 
+        wall_group.draw(screen)
+        player_group.draw(screen)
+
+
     # -------- Main Program Loop -----------
     while True:
         # Handle events
@@ -63,20 +60,22 @@ def main():
         draw()
         # Update objects
         player.update()
-
         # Updates everything
         #pygame.display.flip
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(60)
 
 if __name__ == "__main__":
     main()
 
+#if pygame.sprite.spritecollideany(player,wall_group):
+# image = pygame.image.load('Resources/board.png').convert_alpha()
+# board_surface = pygame.transform.scale(image, screen.get_size())
+#board_surface = pygame.Surface(screen.get_size())
+# maze_surface = pygame.Surface(screen.get_size())
+# maze_surface.fill('White')
+# Create a grid
+### Initialize Game objects
 
- # image = pygame.image.load('Resources/board.png').convert_alpha()
-    # board_surface = pygame.transform.scale(image, screen.get_size())
-    #board_surface = pygame.Surface(screen.get_size())
-    # maze_surface = pygame.Surface(screen.get_size())
-    # maze_surface.fill('White')
-    # Create a grid
-    ### Initialize Game objects
+# if pygame.sprite.spritecollideany(player,wall_group):
+#     print("HIT")
