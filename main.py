@@ -22,7 +22,7 @@ def main():
     clock = pygame.time.Clock() # Used to manage how fast the screen updates
     # Create Game Sprites     
     player_group = pygame.sprite.Group()
-    player = Player()
+    player = Player(5,0)
     player_group.add(player)
     wall_group = WallGroup()
 
@@ -48,8 +48,8 @@ def main():
                 rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE)
                 pygame.draw.rect(surface, (120, 120, 120), rect, 1)
 
-        wall_group.draw(screen)
         player_group.draw(screen)
+        wall_group.draw(screen)
 
 
     # -------- Main Program Loop -----------

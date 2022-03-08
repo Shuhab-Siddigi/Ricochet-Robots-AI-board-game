@@ -4,7 +4,7 @@ from game.constants import COLS, MARGIN, ROWS, TILE_SIZE
 
 class Player(pygame.sprite.Sprite):
     """A player object for the game """
-    def __init__(self):
+    def __init__(self,x:int,y:int):
         super().__init__()
        
         spreedsheet = pygame.image.load("Resources/playersheet.jpg").convert_alpha()
@@ -13,9 +13,9 @@ class Player(pygame.sprite.Sprite):
         self.image.fill('White')
         self.image.blit(spreedsheet,(0,0),(50,50,50,50))
         
-        self.rect =  pygame.Rect(0, TILE_SIZE*0, TILE_SIZE, TILE_SIZE)
-        self.X = 0
-        self.Y = 0
+        self.rect =  pygame.Rect(TILE_SIZE, TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        self.X = x
+        self.Y = y
 
         self.states = ["IDLE","UP","DOWN","LEFT","RIGHT"]
         self.state = "IDLE"
@@ -77,7 +77,7 @@ class Player(pygame.sprite.Sprite):
             if abs(wall.rect.left - self.rect.right) < collision_tolerence:
                 print("HIT RIGHT")
                 self.hitbox[3] = True
-    
+    # applicable moves
     def movement(self):
         if self.state == "UP" and self.Y > 0 and not self.hitbox[0]:
             self.Y -= 1
