@@ -32,21 +32,19 @@ def main():
     board_group.add(player)
     wall_group = WallGroup()
     
-    
-    
-
-    
     def handle_events() -> None:
         """Handles all the different events in the game"""
         for event in pygame.event.get():  # All user events
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        walls = pygame.sprite.spritecollide(player,wall_group,False)
-        for wall in walls:
-            print(wall.rect)
-        #     print("HIT")
-        
+        if pygame.sprite.spritecollideany(player,wall_group):
+            print("HIT")
+    
+    # def collision() -> None:
+    #     for wall in pygame.sprite.spritecollide(player,wall_group,False):
+    #         player.isCollision(wall)
+    
     #def update():
         #if player.rect.colliderect(rect):
             #print("HIT")
@@ -65,6 +63,7 @@ def main():
         handle_events()
         # Draw on screen
         draw()
+        #collision()
         # Update objects
         player.update()
         # Updates everything

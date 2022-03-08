@@ -2,7 +2,6 @@
 import pygame
 from game.constants import *
 class VerticalWall(pygame.sprite.Sprite):
-
     def __init__(self,x,y):
         super().__init__()
         
@@ -17,10 +16,20 @@ class HorizontalWall(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x*TILE_SIZE, y*TILE_SIZE-2.5, TILE_SIZE, 5)
         pygame.draw.rect(self.image,'Black', self.rect)
 
+class MiddleSquare(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()  
+        self.image = pygame.Surface((TILE_SIZE*2, TILE_SIZE*2))
+        self.rect = pygame.Rect(7*TILE_SIZE, 7*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2)
+        pygame.draw.rect(self.image,'Black', self.rect)
+        image = pygame.image.load("Resources/DTU-logo.jpg").convert_alpha()
+        image = pygame.transform.scale(image, self.image.get_size())
+        self.image.blit(image,(0,0))
+        
 class WallGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
-        
+
         # # WALL START TOP LEFT CORNER -> 
         self.add(VerticalWall(5,0))
         self.add(VerticalWall(13,0))
@@ -64,3 +73,5 @@ class WallGroup(pygame.sprite.Group):
         self.add(VerticalWall(15,14))
         self.add(VerticalWall(7,15))
         self.add(VerticalWall(12,15))
+
+        self.add(MiddleSquare())
