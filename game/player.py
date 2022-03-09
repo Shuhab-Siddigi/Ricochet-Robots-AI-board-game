@@ -62,9 +62,10 @@ class Player(pygame.sprite.Sprite):
                 self.state = self.states[4]
                 self.image= self.animations[0][0]
    
-    def collision(self,wall:pygame.rect):
+    def collision(self,wall:pygame.sprite.Sprite):
         collision_tolerence = MARGIN
         if self.rect.colliderect(wall):
+            # Small walls
             if abs(wall.rect.bottom - self.rect.top) < collision_tolerence:
                 print("HIT TOP")
                 self.hitbox[0] = True
@@ -77,6 +78,7 @@ class Player(pygame.sprite.Sprite):
             if abs(wall.rect.left - self.rect.right) < collision_tolerence:
                 print("HIT RIGHT")
                 self.hitbox[3] = True
+
     # applicable moves
     def movement(self):
         if self.state == "UP" and self.Y > 0 and not self.hitbox[0]:

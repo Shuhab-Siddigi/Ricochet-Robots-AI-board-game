@@ -12,7 +12,6 @@ def main():
     surface = pygame.Surface(screen.get_size()) # screen surface
     surface = surface.convert() # Convert it to a pygame object
     surface.fill('White') # Fill the first canvas white
-    rect = surface.get_rect()
 
     pygame.display.set_caption("  Ricochet Robot AI board game Group 13") # Set title of screen
     pygame.display.set_icon( # Set the left corner icon
@@ -20,10 +19,12 @@ def main():
     )
 
     clock = pygame.time.Clock() # Used to manage how fast the screen updates
+    
     # Create Game Sprites     
     player_group = pygame.sprite.Group()
     player = Player(5,0)
     player_group.add(player)
+    emblem_group = pygame.sprite.Group()
     wall_group = WallGroup()
 
 
@@ -35,9 +36,8 @@ def main():
                 sys.exit()
         for wall in wall_group:
             player.collision(wall)
-        # player.collision(
-        #     pygame.sprite.spritecollide(player,wall_group,False)
-        # )
+
+        
 
     def draw() -> None:
         """Draws objects on the screen"""        
@@ -50,6 +50,7 @@ def main():
 
         player_group.draw(screen)
         wall_group.draw(screen)
+        emblem_group.draw(screen)
 
 
     # -------- Main Program Loop -----------
@@ -60,8 +61,9 @@ def main():
         draw()
         # Update objects
         player.update()
+        wall_group.update()
+        emblem_group.update()
         # Updates everything
-        #pygame.display.flip
         pygame.display.update()
         clock.tick(60)
 
@@ -79,3 +81,14 @@ if __name__ == "__main__":
 
 # if pygame.sprite.spritecollideany(player,wall_group):
 #     print("HIT")
+
+
+# emblem = pygame.sprite.Sprite()
+# emblem.image = pygame.Surface((TILE_SIZE*2, TILE_SIZE*2))
+# emblem.image.fill('White')
+# emblem.rect = pygame.Rect(*surface.get_rect().center, 0, 0).inflate(TILE_SIZE*2, TILE_SIZE*2)
+# image = pygame.image.load("Resources/DTU-logo.jpg").convert_alpha()
+# emblem.image = pygame.transform.scale(image, (TILE_SIZE*2, TILE_SIZE*2))
+
+
+# # emblem.rect = pygame.Rect(*surface.get_rect().center, 0, 0).inflate(TILE_SIZE*2, TILE_SIZE*2)

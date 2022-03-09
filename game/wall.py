@@ -21,12 +21,15 @@ class MiddleSquare(pygame.sprite.Sprite):
         super().__init__()  
         image = pygame.image.load("Resources/DTU-logo.jpg").convert_alpha()
         self.image = pygame.transform.scale(image, (TILE_SIZE*2, TILE_SIZE*2))
-        self.rect = pygame.Rect(7*TILE_SIZE, 7*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2)
-        
+        # self.rect = pygame.Rect(7*TILE_SIZE, 7*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (7*TILE_SIZE, 7*TILE_SIZE)
+        #pygame.draw.rect(self.image,'Black', self.rect,5)
 class WallGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
+        
         # # WALL START TOP LEFT CORNER -> 
         self.add(VerticalWall(5,0))
         self.add(VerticalWall(13,0))
@@ -70,5 +73,4 @@ class WallGroup(pygame.sprite.Group):
         self.add(VerticalWall(15,14))
         self.add(VerticalWall(7,15))
         self.add(VerticalWall(12,15))
-
         self.add(MiddleSquare())
