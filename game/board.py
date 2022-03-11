@@ -1,50 +1,46 @@
+import pprint
 import pygame
 
-from game.constants import BOARD_HEIGHT, BOARD_WIDTH, COLS, MARGIN, ROWS, TILE_SIZE
+from game.constants import BOARD_HEIGHT, BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_WIDTH, COLS, ROWS, TILE_SIZE
+from game.images import Images
+from logic.datastructures import Graph
 
-class BoardGroup(pygame.sprite.Group):
-    def __init__(self):
-        super().__init__()
-        # Create the border for the game
-        boarder = Boarder()
-        self.add(boarder)
-        # Create the board for the game
-        board = Board()
-        board.rect.x = MARGIN
-        board.rect.y = MARGIN
-        self.add(board)
-        # Create the midle emblem for the game
-        emblem = Emblem()
-        emblem.rect.x = MARGIN+TILE_SIZE*7
-        emblem.rect.y = MARGIN+TILE_SIZE*7
-        self.add(emblem)
-
-class Boarder(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.Surface((BOARD_WIDTH+MARGIN*2, BOARD_HEIGHT+MARGIN*2))
-        self.image.fill('White')
-        self.rect = self.image.get_rect()
-        pygame.draw.rect(self.image,'Black',self.rect, 5)
 
 class Board(pygame.sprite.Sprite):
     """A Board object for the game """
-    def __init__(self):
+    def __init__(self,level:list):
         super().__init__()
-        self.image = pygame.Surface((BOARD_WIDTH, BOARD_HEIGHT))
+        # Create board surface
+        self.image = pygame.Surface((BOARD_WIDTH,BOARD_HEIGHT)) # screen surface
         self.image.fill('White')
         self.rect = self.image.get_rect()
-        for rows in range(ROWS):
-            for columns in range(COLS):
-                rect = pygame.Rect(rows*TILE_SIZE, columns*TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(self.image, (120, 120, 120), rect, 1)
+        # Load Images
+        images = Images()
+        # Create adjacency list        
+        self.graph = Graph()
+        
 
-class Emblem(pygame.sprite.Sprite):
-    """A Emblem object for the game """
-    def __init__(self):
+        # Draw objects on board
+        for y in range(ROWS):
+            for x in range(COLS):
+                wall = level[y][x][:2]
+                image = images[wall]
+                self.image.blit(image,(x*TILE_SIZE,y*TILE_SIZE))
+                # Create possible moves for x,y position
+                self.graph.add_edge(level,x,y)
+        
+        self.graph.print_graph()
+        
+        emblem = pygame.image.load("resources/DTU-logo.jpg")
+        emblem = pygame.transform.scale(emblem,(1.7*TILE_SIZE,1.7*TILE_SIZE))
+        print(self.rect.center)
+        self.image.blit(emblem,(7*TILE_SIZE+8,7*TILE_SIZE+8))
+
+class GUI(pygame.sprite.Group):
+    """A Board object for the game """
+    def __init__(self,level:list):
         super().__init__()
-
-        self.image = pygame.Surface((TILE_SIZE*2,TILE_SIZE*2))
-        self.image.fill('White')
-        self.rect = self.image.get_rect()
-        pygame.draw.rect(self.image,'Black',self.rect, 5)
+        board = Board(level)
+        board.rect.x = BOARD_POSITION_X
+        board.rect.y = BOARD_POSITION_Y
+        self.add(board)
