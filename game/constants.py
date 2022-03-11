@@ -1,4 +1,4 @@
-# Game Constatns
+# Game Constants
 SCREEN_WIDTH, SCREEN_HEIGHT = 800,800
 # Board Constants
 BOARD_WIDTH,BOARD_HEIGHT = 800,800
