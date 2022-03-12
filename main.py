@@ -1,7 +1,7 @@
 import pygame
 import sys
 from game import levels
-from game.board import GUI
+from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
 
@@ -17,9 +17,11 @@ def main():
     pygame.display.set_caption("  Ricochet Robot AI board game Group 13")  # Set title of screen
     clock = pygame.time.Clock()  # Used to manage how fast the screen updates
 
-    board = GUI(levels.Level0)
-    player = Player(board.graph, 14, 0, 0)
-    board.add(player)
+    obstacle_group = pygame.sprite.Group()
+    board = Board(levels.Level0)
+    player_group = pygame.sprite.Group()
+    player = Player(board.graph, 4, 0, 0)
+    player_group.add(player)
 
     def handle_events() -> None:
         """Handles all the different events in the game"""
@@ -27,15 +29,29 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                # clicked_sprites = [s for s in obstacle_group if s.rect.collidepoint(pos)]
+            #     for sprite in clicked_sprites:
+            #         print(sprite.rect)
+            # for block in obstacle_group:
+            #     if(pygame.sprite.collide_rect(player, block)):
+            #         print(block.rect)
+               
+      # get a list of all sprites that are under the mouse cursor
+    
 
     def draw():
         # Draw first screen
         screen.blit(surface, (0, 0))
-        board.draw(surface)
+        surface.blit(board,(0,0))
+        obstacle_group.draw(surface)
+        player_group.draw(surface)
+        #board.draw(surface)
 
     def update():
         # Update Objects
-        board.update()
+        player_group.update()
         # Updates everything
         pygame.display.update()
         clock.tick(60)

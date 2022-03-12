@@ -26,46 +26,64 @@ class Graph(Dict):
                 self[destination] = []
             if source not in self[destination]:
                 self[destination].append(source)
+            # Up
+        def Up(level,x,y):
+            if 0 < y and "S" not in level[y-1][x][:2]:
+                add((x, y), (x, y-1))
+            # Left
+        def Left(level,x,y):
+            if 0 < x and "E" not in level[y][x-1][:2]:
+                add((x, y), (x-1, y))
+            # Down
+        def Down(level,x,y):
+            if y < COLS - 1 and "N" not in level[y+1][x][:2]:
+                add((x, y), (x, y+1))
+            # Right
+        def Right(level,x,y):
+            if x < ROWS - 1 and "W" not in level[y][x+1][:2] :
+                add((x, y), (x+1, y))
+         
+        if level[y][x][:2] == "C-": # Clear
+            Up(level,x,y)
+            Down(level,x,y)
+            Left(level,x,y)
+            Right(level,x,y)
+        
+        if level[y][x][:2] == "N-": # North
+            Down(level,x,y)
+            Left(level,x,y)
+            Right(level,x,y)
+        
+        if level[y][x][:2] == "E-": # East
+            Up(level,x,y)
+            Down(level,x,y)
+            Left(level,x,y)
+          
+        if level[y][x][:2] == "S-": # South
+            Up(level,x,y)
+            Left(level,x,y)
+            Right(level,x,y)
 
-        if x < ROWS - 1:
-            if level[y][x + 1][:2] == "C-":  # Right
-                add((x, y), (x + 1, y))
-            if level[y][x + 1][:2] == "NE":  # North East (right)
-                add((x, y), (x + 1, y))
-            if level[y][x + 1][:2] == "E-":  # East
-                add((x, y), (x + 1, y))
-            if level[y][x + 1][:2] == "SE":  # South East (right)
-                add((x, y), (x + 1, y))
-
-        if y < COLS - 1:
-            if level[y + 1][x][:2] == "C-":  # Down
-                add((x, y), (x, y + 1))
-            if level[y + 1][x][:2] == "S-":  # South
-                add((x, y), (x, y + 1))
-            if level[y + 1][x][:2] == "SE":  # South East (down)
-                add((x, y), (x, y + 1))
-            if level[y + 1][x][:2] == "SW":  # South West (down)
-                add((x, y), (x, y + 1))
-
-        if 0 < x:
-            if level[y][x - 1][:2] == "C-":  # Left
-                add((x, y), (x - 1, y))
-            if level[y][x - 1][:2] == "W-":  # West
-                add((x, y), (x - 1, y))
-            if level[y][x - 1][:2] == "NW":  # North West (left)
-                add((x, y), (x - 1, y))
-            if level[y][x - 1][:2] == "SW":  # South West (left)
-                add((x, y), (x - 1, y))
-
-        if 0 < y:
-            if level[y - 1][x][:2] == "C-":  # Up
-                add((x, y), (x, y - 1))
-            if level[y - 1][x][:2] == "N-":  # North
-                add((x, y), (x, y - 1))
-            if level[y - 1][x][:2] == "NW":  # North West (up)
-                add((x, y), (x, y - 1))
-            if level[y - 1][x][:2] == "NE":  # North East (up)
-                add((x, y), (x, y - 1))
+        if level[y][x][:2] == "W-": # South
+            Up(level,x,y)
+            Down(level,x,y)
+            Right(level,x,y)
+        
+        if level[y][x][:2] == "NE": # North East
+            Down(level,x,y)
+            Left(level,x,y)
+        
+        if level[y][x][:2] == "NW": # North West
+            Down(level,x,y)
+            Right(level,x,y)
+        
+        if level[y][x][:2] == "SE": # South East
+            Up(level,x,y)
+            Left(level,x,y)
+        
+        if level[y][x][:2] == "SW": # South West
+            Down(level,x,y)
+            Right(level,x,y)
 
     def remove_edge(self, source, destination):
         if destination in self[source]:
