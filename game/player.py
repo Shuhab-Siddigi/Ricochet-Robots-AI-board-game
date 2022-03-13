@@ -13,7 +13,8 @@ class Player(pygame.sprite.Sprite):
         self.graph = graph
         # Set first animation frame
         self.animations = PlayerAnimations()
-        self.frame = 3 * color
+        self.color = color
+        self.frame = 3 * self.color
         self.action = 0 # 0 down,1 left, 2 right, 3 up
         self.image = self.animations[self.frame][self.action]
         
@@ -94,16 +95,16 @@ class Player(pygame.sprite.Sprite):
         if self.position != self.target:
             if self.check_up(self.position,self.target):
                 self.action = 3
-                self.rect.y -= TILE_SIZE
+                self.rect.centery -= TILE_SIZE
             elif self.check_down(self.position,self.target):
                 self.action = 0
-                self.rect.y += TILE_SIZE
+                self.rect.centery += TILE_SIZE
             elif self.check_left(self.position,self.target):
                 self.action = 1
-                self.rect.x -= TILE_SIZE
+                self.rect.centerx -= TILE_SIZE
             elif self.check_right(self.position,self.target):
                 self.action = 2
-                self.rect.x += TILE_SIZE
+                self.rect.centerx += TILE_SIZE
         else:
             if len(self.moves) != 0:
                 self.target = self.moves.pop(0)
@@ -119,7 +120,7 @@ class Player(pygame.sprite.Sprite):
             if now - self.last_update > self.animation_cooldown:
                 self.last_update = now
                 self.frame = (self.frame + 1) % 3
-                self.image = self.animations[self.frame][self.action]
+                self.image = self.animations[3 * self.color][self.action]
 
     
     def update(self):

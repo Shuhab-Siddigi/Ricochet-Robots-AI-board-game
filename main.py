@@ -23,7 +23,7 @@ def main():
         board_group.add(obstacle)
     
     player_group = pygame.sprite.Group()
-    player = Player(board.graph, 0, 0, 0)
+    player = Player(board.graph, 5, 0, 2)
     player_group.add(player)
     board.graph.print_graph()
     def handle_events() -> None:
