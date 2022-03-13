@@ -5,6 +5,13 @@ from game.constants import BOARD_HEIGHT, BOARD_POSITION_X, BOARD_POSITION_Y, BOA
 from game.images import Images
 from logic.datastructures import Graph
 
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self,image,x,y):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 class Board(pygame.surface.Surface):
     """A Board object for the game """
     def __init__(self, level: list):
@@ -23,11 +30,15 @@ class Board(pygame.surface.Surface):
             for x in range(COLS):
                 wall = level[y][x][:2]
                 image = images[wall]
-                self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
-                self.graph.add_edge(level, x, y)
+                #self.graph.add_edge(level, x, y)
+                if wall == 'C-':
+                    self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
+                else:
+                    self.obstacles.append(Obstacle(image,x * TILE_SIZE, y * TILE_SIZE))
+                    self.graph.add_edge(level, x, y)
 
 
         emblem = pygame.image.load("resources/DTU-logo.jpg")
         emblem = pygame.transform.scale(emblem, (1.7 * TILE_SIZE, 1.7 * TILE_SIZE))
-        self.blit(emblem, (7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
+        self.obstacles.append(Obstacle(emblem,7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
 
