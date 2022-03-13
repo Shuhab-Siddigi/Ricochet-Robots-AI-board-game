@@ -23,7 +23,7 @@ def main():
         board_group.add(obstacle)
     
     player_group = pygame.sprite.Group()
-    player = Player(board.graph, 4, 0, 0)
+    player = Player(board.graph, 0, 0, 0)
     player_group.add(player)
     board.graph.print_graph()
     def handle_events() -> None:
@@ -32,13 +32,14 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONUP:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                clicked_obstacle = [o for o in board_group if o.rect.collidepoint(pos)]
-                for sprite in clicked_obstacle:
-                    player.input(sprite.rect.topleft)
+                # clicked_obstacle = [o for o in board_group if o.rect.collidepoint(pos)]
+                # for sprite in clicked_obstacle:
+                # player.input(sprite.rect.topleft)
+                player.input(pos)
     
-
+    board.graph.print_graph
     def draw():
         # Draw first screen
         screen.blit(surface, (0, 0))

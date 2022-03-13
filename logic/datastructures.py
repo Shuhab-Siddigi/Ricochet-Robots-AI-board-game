@@ -82,7 +82,7 @@ class Graph(Dict):
             Left(level,x,y)
         
         if level[y][x][:2] == "SW": # South West
-            Down(level,x,y)
+            Up(level,x,y)
             Right(level,x,y)
 
     def remove_edge(self, source, destination):

@@ -30,12 +30,12 @@ class Board(pygame.surface.Surface):
             for x in range(COLS):
                 wall = level[y][x][:2]
                 image = images[wall]
-                #self.graph.add_edge(level, x, y)
+                self.graph.add_edge(level, x, y)
                 if wall == 'C-':
                     self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
                 else:
                     self.obstacles.append(Obstacle(image,x * TILE_SIZE, y * TILE_SIZE))
-                    self.graph.add_edge(level, x, y)
+                    
 
 
         emblem = pygame.image.load("resources/DTU-logo.jpg")
