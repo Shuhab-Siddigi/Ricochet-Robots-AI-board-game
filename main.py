@@ -32,7 +32,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 # clicked_obstacle = [o for o in board_group if o.rect.collidepoint(pos)]
                 # for sprite in clicked_obstacle:

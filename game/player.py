@@ -1,4 +1,3 @@
-from turtle import position
 from typing import Dict
 import pygame
 from game.constants import TILE_SIZE
@@ -20,118 +19,110 @@ class Player(pygame.sprite.Sprite):
         
         # Create collision rectangle
         self.rect = self.image.get_rect()
-        # Create possible positions
+        
+        # set player positions
         self.position = (pos_x, pos_y)
-        self.target = (pos_x, pos_y)
-        self.next = self.position
+        
+        # Movement
+        self.moves = []
+        self.path_found = False
+        self.target = self.position
+        self.is_walking = False
 
         # Animation setup
         self.last_update = pygame.time.get_ticks()
-        self.animation_cooldown = 100
-        self.state = "IDLE"
-
-    # def find_next(self,position):
-    #     if self.target != self.position and self.states[0]:
-    #         for next in self.graph[position]:
-    #             if next[0] == self.target[0] and next[1] >= self.target[1]: # Up 
-    #                 self.position = next
-    #             elif  next[0] == self.target[0] and next[1] <= self.target[1]: # Down
-    #                 self.position = next
-    #             elif  next[0] >= self.target[0] and next[1] == self.target[1]: # Left
-    #                 self.position = next
-    #             elif next[0] <= self.target[0] and next[1] == self.target[1]: # Right
-    #                 self.position = next
+        self.animation_cooldown = 50
+        
     
-      
+    def check_up(self,position,next):
+        return next[0] == position[0] and next[1] < position[1] # up
+    def check_down(self,position,next):
+        return next[0] == position[0] and next[1] > position[1] # down
+    def check_left(self,position,next):
+        return next[0] < position[0] and next[1] == position[1] # left
+    def check_right(self,position,next):
+        return next[0] > position[0] and next[1] == position[1] # right
+
+    def traverse_up(self,position):
+        for next in self.graph[position]:
+            if self.check_up(position,next): # up
+                print("Got up node", next)
+                self.moves.append(next)
+                self.traverse_up(next)
+    
+    def traverse_down(self,position):
+        for next in self.graph[position]:
+            if self.check_down(position,next): # down
+                print("Got down node", next)
+                self.moves.append(next)
+                self.traverse_down(next)
+    def traverse_left(self,position):
+        for next in self.graph[position]:
+            if self.check_left(position,next): # left
+                print("Got left node", next)
+                self.moves.append(next)
+                self.traverse_left(next)
+ 
+    
+    def traverse_right(self,position):
+        for next in self.graph[position]:
+            if self.check_right(position,next): # right
+                print("Got right node", next)
+                self.moves.append(next)
+                self.traverse_right(next)
+ 
     def input(self,target):
         x = target[0]//TILE_SIZE
         y = target[1]//TILE_SIZE
-        print(x,y)
-        if y < self.position[1]:
-            self.state = "UP"
-        elif y > self.position[1]:
-            self.state = "DOWN"
-        elif x < self.position[0]:
-            self.state = "LEFT"
-        elif x > self.position[0]:
-            self.state = "RIGHT"
-    #def movement(self):  
         
-        # if self.target != self.position: # Right
-        #     self.find_next(self.position)
-        #     if self.next != None:
-        #         print("Got next", self.next)
-        #         if  self.next[1]*TILE_SIZE < self.rect.y: # Up
-        #             self.states[0] = False
-        #             self.states[1] = True
-        #             self.action = 3
-        #             self.rect.y = self.next[1]*TILE_SIZE
-                
-        #         elif self.next[1]*TILE_SIZE > self.rect.y: # Down
-        #             self.states[0] = False
-        #             self.states[2] = True
-        #             self.action = 0
-        #             self.rect.y = self.next[1]*TILE_SIZE
-                
-        #         elif self.next[0]*TILE_SIZE < self.rect.x: # Left 
-        #             self.states[0] = False
-        #             self.states[3] = True
-        #             self.action = 1
-        #             self.rect.x = self.next[0]*TILE_SIZE
-                
-        #         elif self.next[0]*TILE_SIZE >  self.rect.x : # Right
-        #             self.states[0] = False
-        #             self.states[4] = True
-        #             self.action = 2
-        #             self.rect.x = self.next[0]*TILE_SIZE
-        #         else:
-                    # self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
-            # else:
-            #     for state in range(1,5):
-            #         self.states[state] = False
-            #     self.states[0] = True
+        if not self.is_walking:
+            if self.check_up(self.position,(x,y)):
+                self.traverse_up(self.position)
+            
+            elif self.check_down(self.position,(x,y)):
+                self.traverse_down(self.position)
+            
+            elif self.check_left(self.position,(x,y)):
+                self.traverse_left(self.position)
+            
+            elif self.check_right(self.position,(x,y)):
+                self.traverse_right(self.position)
+    
+    
+    def movement(self):
         
+        if self.position != self.target:
+            if self.check_up(self.position,self.target):
+                self.rect.y -= TILE_SIZE
+            elif self.check_down(self.position,self.target):
+                self.rect.y += TILE_SIZE
+            elif self.check_left(self.position,self.target):
+                self.rect.x -= TILE_SIZE
+            elif self.check_right(self.position,self.target):
+                self.rect.x += TILE_SIZE
+        else:
+            if len(self.moves) != 0:
+                self.target = self.moves.pop(0)
+                self.is_walking = True
+            else:
+                self.is_walking = False
+        # Update position
+        self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
+
     # def animate(self):
-    #     if not self.states[0]:
+    #     if self.path_found:
     #         now = pygame.time.get_ticks()
     #         if now - self.last_update > self.animation_cooldown:
     #             self.last_update = now
     #             self.frame = (self.frame + 1) % 3
     #             self.image = self.animations[self.frame][self.action]
-     
 
-  
+    
     def update(self):
         # OPS must be in this order!
-        #self.movement()
-        for next in self.graph[self.position]:
-            if self.state == "UP":
-                if next[0] == self.position[0] and next[1] < self.position[1]: # up
-                    print("UP got next left", next)
-                    self.position = next
-
-            if self.state == "DOWN":
-                if next[0] == self.position[0] and next[1] > self.position[1]: # down
-                    print("DOWN got next left", next)
-                    self.position = next
-
-            if self.state == "LEFT":
-                if next[0] < self.position[0] and next[1] == self.position[1]: # left
-                    print("LEFT got next left", next)
-                    self.position = next
-        
-            if self.state == "RIGHT":
-                print(self.position)
-                if next[0] > self.position[0] and next[1] == self.position[1]: # right
-                    print("RIGHT got next left", next)
-                    self.position = next
-
-        self.rect.x = self.position[0]*TILE_SIZE
-        self.rect.y = self.position[1]*TILE_SIZE
-        #self.update_position()
+        self.movement()
         #self.animate()
-        #self.update_position()
-        #self.movement()
+        print(self.moves,self.target,self.position)
 
-    # def destroy(self):
-    #     self.kill()
+    def destroy(self):
+        self.kill()
