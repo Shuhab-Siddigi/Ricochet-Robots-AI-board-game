@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
 
         # Animation setup
         self.last_update = pygame.time.get_ticks()
-        self.animation_cooldown = 50
+        self.animation_cooldown = 40
         
     
     def check_up(self,position,next):
@@ -76,16 +76,16 @@ class Player(pygame.sprite.Sprite):
         y = target[1]//TILE_SIZE
         
         if not self.is_walking:
-            if self.check_up(self.position,(x,y)):
+            if self.check_up(self.position,(x,y)): # Up
                 self.traverse_up(self.position)
             
-            elif self.check_down(self.position,(x,y)):
+            elif self.check_down(self.position,(x,y)): # Down
                 self.traverse_down(self.position)
             
-            elif self.check_left(self.position,(x,y)):
+            elif self.check_left(self.position,(x,y)): # Left
                 self.traverse_left(self.position)
             
-            elif self.check_right(self.position,(x,y)):
+            elif self.check_right(self.position,(x,y)): # Right
                 self.traverse_right(self.position)
     
     
@@ -93,12 +93,16 @@ class Player(pygame.sprite.Sprite):
         
         if self.position != self.target:
             if self.check_up(self.position,self.target):
+                self.action = 3
                 self.rect.y -= TILE_SIZE
             elif self.check_down(self.position,self.target):
+                self.action = 0
                 self.rect.y += TILE_SIZE
             elif self.check_left(self.position,self.target):
+                self.action = 1
                 self.rect.x -= TILE_SIZE
             elif self.check_right(self.position,self.target):
+                self.action = 2
                 self.rect.x += TILE_SIZE
         else:
             if len(self.moves) != 0:
@@ -109,19 +113,19 @@ class Player(pygame.sprite.Sprite):
         # Update position
         self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
 
-    # def animate(self):
-    #     if self.path_found:
-    #         now = pygame.time.get_ticks()
-    #         if now - self.last_update > self.animation_cooldown:
-    #             self.last_update = now
-    #             self.frame = (self.frame + 1) % 3
-    #             self.image = self.animations[self.frame][self.action]
+    def animate(self):
+        if self.is_walking:
+            now = pygame.time.get_ticks()
+            if now - self.last_update > self.animation_cooldown:
+                self.last_update = now
+                self.frame = (self.frame + 1) % 3
+                self.image = self.animations[self.frame][self.action]
 
     
     def update(self):
         # OPS must be in this order!
         self.movement()
-        #self.animate()
+        self.animate()
         print(self.moves,self.target,self.position)
 
     def destroy(self):
