@@ -36,8 +36,24 @@ class PlayerAnimations(list):
             self.append([x])
             for y in range(4):
                 self[x].append([y])
-                surface = pygame.Surface((TILE_SIZE - MARGIN, TILE_SIZE - MARGIN))
-                surface.set_colorkey((255,255,255)) # Dont draw white
+                # Create a surface for the image
+                surface = pygame.Surface((TILE_SIZE, TILE_SIZE))
+                # Fill white
                 surface.fill('White')
+                # Make transparent
+                surface.set_colorkey((255,255,255))
+                # add surface in list
                 self[x][y] = surface
-                self[x][y].blit(spreedsheet, (0, 0), (x * 48, y * 48, 50, 50))
+                # Load part of the spreedsheet
+                image = spreedsheet.subsurface((x * 48, y * 48, 50, 50))
+                # Should make it more understandable for pygame
+                image.convert_alpha()
+                # Remove all white color
+                image.set_colorkey((255,255,255))
+                # Transform the image to a valid size
+                image = pygame.transform.scale(image, (TILE_SIZE-MARGIN*2, TILE_SIZE-MARGIN*2))
+                # place image on surface
+                self[x][y].blit(image,(MARGIN, MARGIN//2))
+                
+                #self[x][y].blit(spreedsheet, (0, 0), (x * 48, y * 48, 50, 50))
+        print(self)
