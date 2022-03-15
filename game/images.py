@@ -30,7 +30,7 @@ class Images(Dict):
 class PlayerAnimations(list):
     # Move animation lists
     def __init__(self):
-        spreedsheet = pygame.image.load("Resources/playersheet.jpg").convert_alpha()
+        spreedsheet = pygame.image.load("resources/playersheet.jpg").convert_alpha()
 
         for x in range(9):
             self.append([x])
