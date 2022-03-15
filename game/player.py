@@ -120,6 +120,8 @@ class Player(pygame.sprite.Sprite):
                     TILE_SIZE
                 )
         else:
+            self.action = 0
+            self.image = self.animations[self.frame + 3 * self.color][self.action]
             self.position = (self.target.x//TILE_SIZE,self.target.y//TILE_SIZE)
 
     def destroy(self):

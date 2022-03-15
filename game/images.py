@@ -55,5 +55,3 @@ class PlayerAnimations(list):
                 # place image on surface
                 self[x][y].blit(image,(MARGIN, MARGIN//2))
                 
-                #self[x][y].blit(spreedsheet, (0, 0), (x * 48, y * 48, 50, 50))
-        print(self)
