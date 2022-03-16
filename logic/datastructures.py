@@ -22,6 +22,18 @@ class Graph(Dict):
         if source not in self[destination]:
             self[destination].append(source)
 
+    def remove(self, source, destination):
+        if destination in self[source]:
+            self[source].remove(destination)
+        if source in self[destination]:
+            self[destination].remove(source)
+
+        if len(self[source]) == 0:
+            self.pop(source)
+
+        if len(self[destination]) == 0:
+            self.pop(destination)
+
 # Bi-Directional Adjacency List
 class Board_graph(Graph):
 
@@ -89,16 +101,6 @@ class Board_graph(Graph):
             Up(level,x,y)
             Right(level,x,y)
 
-    def remove_edge(self, source, destination):
-        if destination in self[source]:
-            self[source].remove(destination)
-        if source in self[destination]:
-            self[destination].remove(source)
-
-        if len(self[source]) == 0:
-            self.pop(source)
-
-        if len(self[destination]) == 0:
-            self.pop(destination)
+   
 
 
