@@ -71,7 +71,6 @@ class Player(pygame.sprite.Sprite):
         if not self.is_walking:
             if self.check_up(self.position,rect_position): # Up
                 self.up()
-                
             elif self.check_down(self.position,rect_position): # Down
                 self.down()
                 self.is_walking = True

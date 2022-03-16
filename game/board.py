@@ -3,7 +3,7 @@ import pygame
 
 from game.constants import BOARD_HEIGHT, BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_WIDTH, COLS, ROWS, TILE_SIZE
 from game.images import Images
-from logic.datastructures import Graph
+from logic.datastructures import Board_graph
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self,image,x,y):
@@ -21,7 +21,7 @@ class Board(pygame.surface.Surface):
         # Load Images
         images = Images()
         # Create adjacency list        
-        self.graph = Graph()
+        self.graph = Board_graph()
         # Create list to hold all tiles for collison detection
         self.obstacles = []
 

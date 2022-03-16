@@ -28,8 +28,7 @@ def main():
 
 
     player_group.add(player)
-
-    board.graph.print_graph()
+    
     def handle_events() -> None:
         """Handles all the different events in the game"""
         for event in pygame.event.get():  # All user events
@@ -43,8 +42,6 @@ def main():
                 # player.input(sprite.rect.topleft)
                 player.input(pos)
 
-    
-    board.graph.print_graph
     def draw():
         # Draw first screen
         screen.blit(surface, (0, 0))
