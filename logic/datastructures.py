@@ -138,18 +138,16 @@ def optimize_adjacency_list(graph):
     g = copy.deepcopy(graph)
     optimized_graph = Graph()
     for key in g.keys():
-        # for neighbour in g[key]:
-    
-        # if(self.get_direction(key, neighbour) == "Left"):
-        optimized_graph.add(key, travel(g, check_left, key))
-        # if(get_direction(key, neighbour) == "Right"):
-        optimized_graph.add(key, travel(g, check_right, key))
-        # if(get_direction(key, neighbour) == "Up"):
-        optimized_graph.add(key, travel(g, check_up, key))
-        # if(get_direction(key, neighbour) == "Down"):
-        optimized_graph.add(key, travel(g, check_down, key))
+        if (travel(g, check_left, key) != key):
+            optimized_graph.add(key, travel(g, check_left, key))
+        if (travel(g, check_right, key) != key):
+            optimized_graph.add(key, travel(g, check_right, key))
+        if (travel(g, check_up, key) != key):
+            optimized_graph.add(key, travel(g, check_up, key))
+        if (travel(g, check_down, key) != key):
+            optimized_graph.add(key, travel(g, check_down, key))
 
-    pprint.pprint(optimized_graph)
+    # pprint.pprint(optimized_graph)
 
     return optimized_graph
 

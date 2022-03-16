@@ -4,6 +4,7 @@ from game import levels
 from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
+from logic import algorithms
 from logic.datastructures import optimize_adjacency_list
 
 
@@ -25,11 +26,20 @@ def main():
     
     player_group = pygame.sprite.Group()
     color = 0
-    player = Player(board.graph, 1, 1, color)
+    player = Player(board.graph, 0, 0, color)
+    player1 = Player(board.graph, 5, 9, color)
+    player2 = Player(board.graph, 3, 5, color)
+    player3 = Player(board.graph, 13, 13, color)
 
-    optimize_adjacency_list(board.graph)
+
+    # optimize_adjacency_list(board.graph)
+    algorithms.solve("BFS", board.graph)
 
     player_group.add(player)
+    player_group.add(player1)
+    player_group.add(player2)
+    player_group.add(player3)
+
     
     def handle_events() -> None:
         """Handles all the different events in the game"""
