@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         # set player positions
         self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
 
-        #self.isActive = False
+        self.isActive = False
         # Movement
         
         # Animation setup
@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         target = position
         has_next = False
         for next in self.graph[position]:
-            if checktype(position,next): # up
+            if checktype(position,next):
                 has_next = True
                 target = next
         if has_next:
