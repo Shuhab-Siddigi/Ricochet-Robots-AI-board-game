@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         # set player positions
         self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
 
-        self.isActive = False
+        self.is_active = False
         # Movement
         
         # Animation setup
