@@ -20,19 +20,19 @@ class Player(pygame.sprite.Sprite):
         
         # Create collision rectangle
         self.rect = self.image.get_rect()
-        
+        self.rect.x = pos_x*TILE_SIZE
+        self.rect.y = pos_y*TILE_SIZE
         # set player positions
-        self.position = (pos_x, pos_y)
+        self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
+
         self.isActive = False
         # Movement
-        self.moves = []
-        self.target = self.rect
         
         # Animation setup
         self.last_update = pygame.time.get_ticks()
         self.animation_cooldown = 40
         self.speed = 5
-        
+        self.is_walking = False    
     
     def check_up(self,position,next):
         return next[0] == position[0] and next[1] < position[1] # up
@@ -43,86 +43,79 @@ class Player(pygame.sprite.Sprite):
     def check_right(self,position,next):
         return next[0] > position[0] and next[1] == position[1] # right
 
-    def traverse_up(self,position):
+    def travel(self,checktype,position):
+        target = position
+        has_next = False
         for next in self.graph[position]:
-            if self.check_up(position,next): # up
-                print("Got up node", next)
-                self.moves.append(next)
-                self.traverse_up(next)
-    
-    def traverse_down(self,position):
-        for next in self.graph[position]:
-            if self.check_down(position,next): # down
-                print("Got down node", next)
-                self.moves.append(next)
-                self.traverse_down(next)
-    def traverse_left(self,position):
-        for next in self.graph[position]:
-            if self.check_left(position,next): # left
-                print("Got left node", next)
-                self.moves.append(next)
-                self.traverse_left(next)
- 
-    
-    def traverse_right(self,position):
-        for next in self.graph[position]:
-            if self.check_right(position,next): # right
-                print("Got right node", next)
-                self.moves.append(next)
-                self.traverse_right(next)
- 
+            if checktype(position,next): # up
+                has_next = True
+                target = next
+        if has_next:
+            return self.travel(checktype,target)
+        else:
+            return target
+       
+    def up(self):
+        self.position = self.travel(self.check_up,self.position)
+    def down(self):
+        self.position = self.travel(self.check_down,self.position)
+    def left(self):
+        self.position = self.travel(self.check_left,self.position)
+    def right(self):
+        self.position = self.travel(self.check_right,self.position)
+
+
     def input(self,target):
-        x = target[0]//TILE_SIZE
-        y = target[1]//TILE_SIZE
+        rect_position = (target[0]//TILE_SIZE,target[1]//TILE_SIZE)
         
-        if not self.rect.center != self.target.center:
-            if self.check_up(self.position,(x,y)): # Up
-                self.traverse_up(self.position)
-            
-            elif self.check_down(self.position,(x,y)): # Down
-                self.traverse_down(self.position)
-            
-            elif self.check_left(self.position,(x,y)): # Left
-                self.traverse_left(self.position)
-            
-            elif self.check_right(self.position,(x,y)): # Right
-                self.traverse_right(self.position)
+        if not self.is_walking:
+            if self.check_up(self.position,rect_position): # Up
+                self.up()
+                
+            elif self.check_down(self.position,rect_position): # Down
+                self.down()
+                self.is_walking = True
+            elif self.check_left(self.position,rect_position): # Left
+                self.left()
+                self.is_walking = True
+            elif self.check_right(self.position,rect_position): # Right
+                self.right()
+                self.is_walking = True
+            else:
+                print("invalid move")
+
+    def movement(self):
+        rect_position = (self.rect.x,self.rect.y)
+        target = (self.position[0]*TILE_SIZE,self.position[1]*TILE_SIZE)
+        
+        if rect_position != target:
+            self.is_walking = True
+            if self.check_up(rect_position,target):
+                self.action = 3
+                self.rect.centery -= self.speed 
+            elif self.check_down(rect_position,target):
+                self.action = 0
+                self.rect.centery += self.speed 
+            elif self.check_left(rect_position,target):
+                self.action = 1
+                self.rect.centerx -= self.speed 
+            elif self.check_right(rect_position,target):
+                self.action = 2
+                self.rect.centerx += self.speed
+        else:
+            self.is_walking = False
+    
+    def animate(self):
+        now = pygame.time.get_ticks()
+        if self.is_walking and now - self.last_update > self.animation_cooldown:
+            self.last_update = now
+            self.frame = (self.frame + 1) % 3
+            self.image = self.animations[self.frame + 3 * self.color][self.action]
     
     def update(self):
-        now = pygame.time.get_ticks()
-        position = self.rect.center
-        target = self.target.center
-        if position != target:
-            print(position,target)
-            if now - self.last_update > self.animation_cooldown:
-                self.last_update = now
-                self.frame = (self.frame + 1) % 3
-                self.image = self.animations[self.frame + 3 * self.color][self.action]
-                if self.check_up(position,target):
-                    self.action = 3
-                    self.rect.centery -= self.speed 
-                elif self.check_down(position,target):
-                    self.action = 0
-                    self.rect.centery += self.speed 
-                elif self.check_left(position,target):
-                    self.action = 1
-                    self.rect.centerx -= self.speed 
-                elif self.check_right(position,target):
-                    self.action = 2
-                    self.rect.centerx += self.speed
-        elif len(self.moves) != 0:
-                ("Updating list")
-                target = self.moves.pop(0)
-                self.target = pygame.Rect(
-                    target[0]*TILE_SIZE,
-                    target[1]*TILE_SIZE,
-                    TILE_SIZE,
-                    TILE_SIZE
-                )
-        else:
-            self.action = 0
-            self.image = self.animations[self.frame + 3 * self.color][self.action]
-            self.position = (self.target.x//TILE_SIZE,self.target.y//TILE_SIZE)
+        self.movement()
+        self.animate()
+        
 
     def destroy(self):
         self.kill()

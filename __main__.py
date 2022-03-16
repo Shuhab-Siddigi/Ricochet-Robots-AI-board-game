@@ -24,7 +24,7 @@ def main():
     
     player_group = pygame.sprite.Group()
     color = 0
-    player = Player(board.graph, 0, 0, color)
+    player = Player(board.graph, 1, 1, color)
 
 
     player_group.add(player)
