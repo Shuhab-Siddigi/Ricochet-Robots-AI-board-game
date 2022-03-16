@@ -24,7 +24,7 @@ def getDirection(start, destination):
         return "Down"
 
 
-def GetLegalMoves(state, parentState=None):  # TODO implement with illegal to go back where you came
+def GetLegalMoves(state, parentState=None):  # TODO Make logic to ignore previously visited states.
     moves = {}
     legalNewStates = []
 
@@ -39,13 +39,13 @@ def GetLegalMoves(state, parentState=None):  # TODO implement with illegal to go
                     if currentPlayer.x != otherPlayer.x and currentPlayer.y != otherPlayer.y:
                         moves[currentPlayer].append(move)
                         break
-                    elif (otherPlayer.x < currentPlayer.x and otherPlayer.x >= move.x):
+                    elif currentPlayer.x > otherPlayer.x >= move.x:
                         moves[currentPlayer].append((otherPlayer.x + 1, otherPlayer.y))
-                    elif (otherPlayer.x > currentPlayer.x and otherPlayer.x <= move.x):
+                    elif currentPlayer.x < otherPlayer.x <= move.x:
                         moves[currentPlayer].append((otherPlayer.x - 1, otherPlayer.y))
-                    elif (otherPlayer.y < currentPlayer.y and otherPlayer.y >= move.y):
+                    elif currentPlayer.y > otherPlayer.y >= move.y:
                         moves[currentPlayer].append((otherPlayer.x, otherPlayer.y + 1))
-                    elif (otherPlayer.y > currentPlayer.y and otherPlayer.y <= move.y):
+                    elif currentPlayer.y < otherPlayer.y <= move.y:
                         moves[currentPlayer].append((otherPlayer.x, otherPlayer.y - 1))
                     else:
                         moves[currentPlayer].append(move)
@@ -54,7 +54,7 @@ def GetLegalMoves(state, parentState=None):  # TODO implement with illegal to go
         for coord in moves[p]:
             temp = list(state)
             temp[index] = coord
-            if tuple(temp) != parentState:
+            if tuple(temp) != parentState:  # Removes parent-state as a legal move to avoid going back and forward
                 legalNewStates.append(tuple(temp))
     return legalNewStates
 
