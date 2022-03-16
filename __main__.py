@@ -4,6 +4,7 @@ from game import levels
 from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
+from logic.datastructures import optimize_adjacency_list
 
 
 def main():
@@ -26,6 +27,7 @@ def main():
     color = 0
     player = Player(board.graph, 1, 1, color)
 
+    optimize_adjacency_list(board.graph)
 
     player_group.add(player)
     

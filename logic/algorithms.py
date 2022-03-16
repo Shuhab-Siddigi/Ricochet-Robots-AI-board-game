@@ -1,8 +1,18 @@
+from datastructures import Graph
+
+
 visited = set()  # Set to keep track of visited nodes.
 
 aiGraph = {}
-
 startState = ((0, 0), (5, 9), (3, 5), (13, 13))
+
+
+activeRobot = None
+activeToken = ((x,y), 1)
+
+
+
+
 
 
 def dfs(visited, graph, node):
@@ -12,16 +22,6 @@ def dfs(visited, graph, node):
         for neighbour in graph[node]:
             dfs(visited, graph, neighbour)
 
-
-def getDirection(start, destination):
-    if destination.x != start.x:
-        if destination.x < start.x:
-            return "Left"
-        return "Right"
-    else:
-        if destination.y < start.y:
-            return "Up"
-        return "Down"
 
 
 def GetLegalMoves(state, parentState=None):  # TODO Make logic to ignore previously visited states.
@@ -59,9 +59,11 @@ def GetLegalMoves(state, parentState=None):  # TODO Make logic to ignore previou
     return legalNewStates
 
 
-def GoalTest(move):  # TODO
-    pass
+def GoalTest(state):  # TODO
+    return state[activeRobot] == activeToken[0]
 
+def setActiveRobot(self):
+    self.activeRobot = None
 
 def ConstructGUIPath(finalPath):  # TODO
     moves = []
@@ -74,6 +76,7 @@ def BFS():
     pathFound = False
     endState = None
     finalPath = []
+    setActiveRobot()
     queue = GetLegalMoves(startState)
     parentMap[startState] = None
     while len(queue) != 0 and pathFound is False:
