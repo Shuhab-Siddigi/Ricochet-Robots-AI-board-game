@@ -58,3 +58,19 @@ class Board(pygame.surface.Surface):
     
     def inside_board(self,position):
         return position[0] <= BOARD_WIDTH and position[0] > 0 and position[0] <= BOARD_HEIGHT and position[1] > 0
+    
+    def move_players(self,players,actions):
+        if not any(p.is_walking for p in players):
+            if len(actions) != 0:
+                action = actions.pop(0)
+                p = players[action[0]]
+                if action[1] == "Up":
+                    p.up()
+                elif action[1] == "Down":
+                    p.down()
+                elif action[1] == "Left":
+                    p.left()
+                elif action[1] == "Right":
+                    p.right()
+
+

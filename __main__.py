@@ -60,10 +60,19 @@ def main():
         surface.blit(board,(0,0))
         board_group.draw(surface)
         player_group.draw(surface)
-        #board.draw(surface)
+        
 
     def update():
         # Update Objects
+        positions = []
+        for player in players:
+            positions.append(player.position)
+        for player in players:
+            player.update_player_positions(positions)
+      
+        board.move_players(players,actions)
+
+        # Update objects
         player_group.update()
         # Updates everything
         pygame.display.update()
@@ -76,20 +85,6 @@ def main():
         # Draw on screen
         draw()
 
-        if not any(p.is_walking for p in players):
-            if len(actions) != 0:
-                action = actions.pop(0)
-                p = players[action[0]]
-                if action[1] == "Up":
-                    p.up()
-                elif action[1] == "Down":
-                    p.down()
-                elif action[1] == "Left":
-                    p.left()
-                elif action[1] == "Right":
-                    p.right()
-
-        # Update objects
         update()
 
 
@@ -98,7 +93,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# for block in obstacle_group:
-            #     if(pygame.sprite.collide_rect(player, block)):
-            #         print(block.rect)
+ 

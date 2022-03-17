@@ -24,10 +24,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = pos_y*TILE_SIZE
         # set player positions
         self.position = (self.rect.x//TILE_SIZE,self.rect.y//TILE_SIZE)
-
+        
         self.is_active = False
         # Movement
-        
+        self.player_positions = [None] * 4
         # Animation setup
         self.last_update = pygame.time.get_ticks()
         self.animation_cooldown = 40
@@ -48,8 +48,9 @@ class Player(pygame.sprite.Sprite):
         has_next = False
         for next in self.graph[position]:
             if checktype(position,next):
-                has_next = True
-                target = next
+                if not any(next == p for p in self.player_positions):
+                        has_next = True
+                        target = next
         if has_next:
             return self.travel(checktype,target)
         else:
@@ -110,6 +111,10 @@ class Player(pygame.sprite.Sprite):
             self.last_update = now
             self.frame = (self.frame + 1) % 3
             self.image = self.animations[self.frame + 3 * self.color][self.action]
+
+    def update_player_positions(self,positions):
+        self.player_positions = positions
+            
     
     def update(self):
         self.movement()
