@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import sys
 from game import levels
@@ -27,16 +29,20 @@ def main():
     player_group = pygame.sprite.Group()
     players = [
         Player(board.graph, 0, 0, 0), 
-        #Player(board.graph, 5, 2, 2),
-        #Player(board.graph, 6, 4, 1),
-        #Player(board.graph, 7, 3, 0)
+        Player(board.graph, 5, 2, 2),
+        Player(board.graph, 6, 4, 1),
+        Player(board.graph, 7, 3, 0)
     ]
-    
-    # optimize_adjacency_list(board.graph)
-    algorithms.solve("BFS", board.graph)
+
     for player in players:
         player_group.add(player)
-    
+
+    token = random.choice(list(board.tokens.keys()))
+    goal = board.tokens[token]
+    print(goal)
+
+    actions = algorithms.solve("BFS", board.graph, players, goal)
+
     def handle_events() -> None:
         """Handles all the different events in the game"""
         for event in pygame.event.get():  # All user events
@@ -47,7 +53,6 @@ def main():
                 pos = pygame.mouse.get_pos()
                 if board.inside_board(pos):
                     players[0].input(pos)
-                    
 
     def draw():
         # Draw first screen
@@ -70,8 +75,24 @@ def main():
         handle_events()
         # Draw on screen
         draw()
+
+        if not any(p.is_walking for p in players):
+            if len(actions) != 0:
+                action = actions.pop(0)
+                p = players[action[0]]
+                if action[1] == "Up":
+                    p.up()
+                elif action[1] == "Down":
+                    p.down()
+                elif action[1] == "Left":
+                    p.left()
+                elif action[1] == "Right":
+                    p.right()
+
         # Update objects
         update()
+
+
 
 
 if __name__ == "__main__":

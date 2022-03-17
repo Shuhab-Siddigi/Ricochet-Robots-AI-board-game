@@ -1,36 +1,19 @@
-
+import itertools
 import pprint
+import time
+
 from logic import datastructures
 
 
-visited = set()  # Set to keep track of visited nodes.
-
-# aiGraph = None
-# startState = ((0, 0), (5, 9), (3, 5), (13, 13))
-
-
-# activeRobot = None
-# activeToken = ((3,6),0)
-
-
-
-def dfs(visited, graph, node):
-    if node not in visited:
-        print(node)
-        visited.add(node)
-        for neighbour in graph[node]:
-            dfs(visited, graph, neighbour)
-
 class Data:
-
     aiGraph = None
     startState = ((0, 0), (5, 9), (3, 5), (13, 13))
 
-
     activeRobot = None
-    activeToken = ((0,15),0)
+    activeToken = None
 
-def GetLegalMoves(state, parentState=None):  # TODO Make logic to ignore previously visited states.
+
+def GetLegalMoves(state, parentState=None):
     moves = {}
     legalNewStates = []
 
@@ -40,19 +23,19 @@ def GetLegalMoves(state, parentState=None):  # TODO Make logic to ignore previou
     for currentPlayer in state:
         adjacencyMoves = Data.aiGraph[currentPlayer]
         for move in adjacencyMoves:
-            moves[currentPlayer].append(adjust_move_for_robots(state,currentPlayer, move))
-  
+            moves[currentPlayer].append(adjust_move_for_robots(state, currentPlayer, move))
+
     for index, p in enumerate(state):
         for coord in moves[p]:
             temp = list(state)
             temp[index] = coord
-            # print(tuple(temp) != parentState)
-            if tuple(temp) != parentState and tuple(temp) != Data.startState:  # Removes parent-state as a legal move to avoid going back and forward
+            if tuple(temp) != parentState and tuple(
+                    temp) != Data.startState:  # Removes parent-state as a legal move to avoid going back and forward
                 legalNewStates.append(tuple(temp))
     return legalNewStates
 
 
-def adjust_move_for_robots(state, current_player, move): 
+def adjust_move_for_robots(state, current_player, move):
     temp = None
 
     for otherPlayer in state:
@@ -61,32 +44,32 @@ def adjust_move_for_robots(state, current_player, move):
             if current_player[0] != otherPlayer[0] and current_player[1] != otherPlayer[1]:
                 continue
 
-            elif current_player[0] > otherPlayer[0] >= move[0]: # Robot at left
+            elif current_player[0] > otherPlayer[0] >= move[0]:  # Robot at left
                 if temp is not None:
                     if current_player[0] > otherPlayer[0] >= temp[0]:
                         temp = (otherPlayer[0] + 1, otherPlayer[1])
-                else: 
+                else:
                     temp = (otherPlayer[0] + 1, otherPlayer[1])
 
-            elif current_player[0] < otherPlayer[0] <= move[0]: # Robot at right
+            elif current_player[0] < otherPlayer[0] <= move[0]:  # Robot at right
                 if temp is not None:
                     if current_player[0] < otherPlayer[0] <= temp[0]:
                         temp = (otherPlayer[0] - 1, otherPlayer[1])
-                else: 
+                else:
                     temp = (otherPlayer[0] - 1, otherPlayer[1])
 
-            elif current_player[1] > otherPlayer[1] >= move[1]: # Robot at down
+            elif current_player[1] > otherPlayer[1] >= move[1]:  # Robot at down
                 if temp is not None:
                     if current_player[1] > otherPlayer[1] >= temp[1]:
                         temp = (otherPlayer[0], otherPlayer[1] + 1)
-                else: 
+                else:
                     temp = (otherPlayer[0], otherPlayer[1] + 1)
 
-            elif current_player[1] < otherPlayer[1] <= move[1]: # Robot at up
+            elif current_player[1] < otherPlayer[1] <= move[1]:  # Robot at up
                 if temp is not None:
                     if current_player[1] < otherPlayer[1] <= temp[1]:
                         temp = (otherPlayer[0], otherPlayer[1] - 1)
-                else: 
+                else:
                     temp = (otherPlayer[0], otherPlayer[1] - 1)
     if temp is None:
         temp = move
@@ -94,78 +77,86 @@ def adjust_move_for_robots(state, current_player, move):
     return temp
 
 
+def GoalTest(state):
+    return state[Data.activeRobot] == Data.activeToken
 
-
-def GoalTest(state):  # TODO
-    return state[Data.activeRobot] == Data.activeToken[0]
 
 def setActiveRobot():
     Data.activeRobot = 0
 
-def ConstructGUIPath(finalPath):  # TODO
+
+def ConstructGUIPath(finalPath):
     moves = []
-    # [(1, 1)] =humanReadable= [(player1, "left")] Sort start -> end
+    for i, j in enumerate(finalPath[:-1]):
+        for k in range(0, 4):
+            if j[k] != finalPath[i + 1][k]:
+                moves.append((k, datastructures.get_direction(j[k], finalPath[i + 1][k])))
+
+    # # [(1, 1)] =humanReadable= [(player1, "left")] Sort start -> end
+    #up, down, left, right
+
     return moves
 
 
 def BFS(graph):
+    start = time.time()
     parentMap = dict()
     pathFound = False
     endState = None
     finalPath = []
     queue = []
+    amount_of_states_considered = 0
     Data.aiGraph = datastructures.optimize_adjacency_list(graph)
     setActiveRobot()
-    # queue = GetLegalMoves(Data.startState)
     queue.append(Data.startState)
-
-    # print(queue)
-    # print(len(queue))
     parentMap[Data.startState] = None
 
     while len(queue) != 0 and pathFound is False:
         currentState = queue.pop(0)
-        # print(parentMap.get(currentState))
-
         legalNewStates = GetLegalMoves(currentState, parentMap.get(currentState))
+        amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
-            if parentMap.get(state) is not None:
+            # list(itertools.permutations([1, 2, 3, 4], 2))
+            # for i in range (0, 6):
+            if parentMap.get(state) is not None:  # Todo Make separate func
                 continue
             pathFound = GoalTest(state)
             # print(" Testing ", state)
             parentMap[state] = currentState
             if (pathFound):
                 endState = state
-                print(endState)
-                print("Found token with ", len(queue), " states")
+                end = time.time()
+                print("Found goal state with ", amount_of_states_considered, " states considered")
+                print("Time elapsed:", end - start, "seconds")
                 break
             queue.append(state)
 
-    # parentMap[Data.startState] = None
-
     finalPath.append(endState)
     currentState = endState
-    # pprint.pprint(parentMap)
+
     while parentMap.get(currentState) != None:
-        # print(len(parentMap.get(currentState)) > 1)
-        currentState1 = parentMap.get(currentState)
-        # print(currentState1)
-        finalPath.insert(0,currentState1)  # Is same as prepend
-        
-        currentState = currentState1
+        currentState = parentMap.get(currentState)
+        finalPath.insert(0, currentState)  # Is same as prepend
 
-    print("Found solution in " ,len(finalPath) -1)
-    print("\n Path: \n", finalPath)
-
-    return finalPath
-    # return ConstructGUIPath(finalPath)
+    print("Found solution in ", len(finalPath) - 1)
+    print("\n Path: \n")
+    pprint.pprint(finalPath)
+    print(ConstructGUIPath(finalPath))
+    return ConstructGUIPath(finalPath)
 
 
-def solve(algorithm, graph):
+def solve(algorithm, graph, players, goal):
+    if len(players) == 4:
+        temp = []
+        for player in players:
+            temp.append(player.position)
+        Data.startState = tuple(temp)
+        Data.activeToken = goal
+
     if algorithm == "BFS":
         print("BFS")
-        BFS(graph)
-    
+        return BFS(graph)
+
         # return BFS()
     if algorithm == "AStar":
         print("AStar")

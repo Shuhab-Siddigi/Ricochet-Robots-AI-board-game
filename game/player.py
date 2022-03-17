@@ -114,7 +114,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.movement()
         self.animate()
-        print(self.position)
+        # print(self.position)
         
 
     def destroy(self):
