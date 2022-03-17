@@ -1,7 +1,7 @@
 import pprint
 import pygame
 
-from game.constants import BOARD_HEIGHT, BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_WIDTH, COLS, ROWS, TILE_SIZE
+from game.constants import BOARD_HEIGHT, BOARD_WIDTH, COLS, MARGIN, ROWS, TILE_SIZE
 from game.images import Images
 from logic.datastructures import Board_graph
 
@@ -29,16 +29,25 @@ class Board(pygame.surface.Surface):
         for y in range(ROWS):
             for x in range(COLS):
                 wall = level[y][x][:2]
-                image = images[wall]
+                token = level[y][x][2:4]
+                wall_image = images[wall]
+                
                 self.graph.add_edge(level, x, y)
-                if wall == 'C-':
-                    self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
+
+                if token != "--":
+                    token_image = images[token]
+                    merged_image = wall_image.copy()
+                    rect = merged_image.get_rect(centerx=token_image.get_width()+MARGIN,centery=token_image.get_height()+MARGIN)
+                    #token_image.set_colorkey((255,255,255))
+                    merged_image.blit(token_image,rect)
+                    self.blit(merged_image, (x * TILE_SIZE, y * TILE_SIZE))
+                elif wall == 'C-':
+                    # Draw Wall
+                    self.blit(wall_image, (x * TILE_SIZE, y * TILE_SIZE))
                 else:
-                    self.obstacles.append(Obstacle(image,x * TILE_SIZE, y * TILE_SIZE))
-                    
-
-
+                    self.obstacles.append(Obstacle(wall_image,x * TILE_SIZE, y * TILE_SIZE))
+                        
+                
         emblem = pygame.image.load("resources/DTU-logo.jpg")
         emblem = pygame.transform.scale(emblem, (1.7 * TILE_SIZE, 1.7 * TILE_SIZE))
         self.obstacles.append(Obstacle(emblem,7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
-

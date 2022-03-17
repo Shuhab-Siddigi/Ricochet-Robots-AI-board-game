@@ -1,17 +1,53 @@
 # The level is create so the first 2 letters are the Wall type
-# The second 2 letters are the objects in the game i.e
+# Walls
+# walls = [
+#         "C-",  # Clear
+#         "N-",  # North
+#         "E-",  # East
+#         "S-",  # South
+#         "W-",  # West
+#         "NW",  # North West
+#         "NE",  # North East
+#         "SE",  # South East
+#         "SW"  # South West  
+# ]    
+# The second 2 letters are the Tokens in the game
+# # Tokens
+# tokens = [
+#     "BC", # Blue Circle
+#     "BS", # Blue Star
+#     "BT", # Blue Triangle
+#     "BU", # Blue Umbrella
+    
+#     "GC", # Green Circle
+#     "GS", # Green Star
+#     "GT", # Green Triangle
+#     "GU", # Green Umbrella
+    
+#     "RC", # Red Circle
+#     "RS", # Red Star
+#     "RT", # Red Triangle
+#     "RU", # Red Umbrella
+    
+#     "YC", # Yellow Circle
+#     "YS", # Yellow Star
+#     "YT", # Yellow Triangle
+#     "YU", # Yellow Umbrella
+# ]
+
+# Fx
 # WWOO -> Wall,Wall,Object,Object
 
 # Level 1
 Level0 =[
 
-    ["NW--","N---","N---","N---","NE--","N---","N---","N---","N---","N---","N---","NE--","N---","N---","N---","NE--"],
+    ["NW--","N---","N---","N---","NEBC","N---","N---","N---","N---","N---","N---","NE--","N---","N---","N---","NE--"],
     ["W---","C---","C---","C---","C---","C---","SE--","C---","C---","C---","C---","C---","C---","NW--","C---","E---"],
     ["W---","NW--","C---","C---","C---","C---","C---","C---","C---","SE--","C---","C---","C---","C---","C---","E---"],
     ["W---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","SE--"],
     ["W---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","E---"],
     ["SW--","C---","C---","C---","C---","C---","NE--","C---","C---","C---","C---","C---","C---","C---","SW--","E---"],
-    ["W---","C---","C---","SW--","C---","C---","C---","C---","C---","C---","C---","NE--","C---","C---","C---","E---"],
+    ["W---","C---","C---","SWGT","C---","C---","C---","C---","C---","C---","C---","NE--","C---","C---","C---","E---"],
     ["W---","C---","C---","C---","C---","C---","C---","NW--","NE--","C---","C---","C---","C---","C---","C---","E---"],
     ["W---","C---","C---","C---","C---","NE--","C---","SW--","SE--","C---","C---","C---","C---","C---","C---","E---"],
     ["W---","SE--","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","C---","SE--"],

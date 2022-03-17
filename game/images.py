@@ -9,6 +9,7 @@ class Images(Dict):
 
     def __init__(self):
         super().__init__()
+        # Walls
         walls = [
             "C-",  # Clear
             "N-",  # North
@@ -20,12 +21,44 @@ class Images(Dict):
             "SE",  # South East
             "SW"  # South West  
         ]
+        
+        # Tokens
+        tokens = [
+            "BC", # Blue Circle
+            "BS", # Blue Star
+            "BT", # Blue Triangle
+            "BU", # Blue Umbrella
+           
+            "GC", # Green Circle
+            "GS", # Green Star
+            "GT", # Green Triangle
+            "GU", # Green Umbrella
+           
+            "RC", # Red Circle
+            "RS", # Red Star
+            "RT", # Red Triangle
+            "RU", # Red Umbrella
+           
+            "YC", # Yellow Circle
+            "YS", # Yellow Star
+            "YT", # Yellow Triangle
+            "YU", # Yellow Umbrella
+        ]
 
         for wall in walls:
             # Wall
             image_str = "resources/tiles/{}.png".format(wall)
             image = pygame.image.load(image_str)
+            image.convert_alpha()
             self[wall] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+        
+        for token in tokens:
+            # Wall
+            image_str = "resources/tokens/{}.png".format(token)
+            image = pygame.image.load(image_str)
+            image.convert_alpha()
+            self[token] = pygame.transform.scale(image, (TILE_SIZE-MARGIN*4, TILE_SIZE-MARGIN*4))
+
 
 class PlayerAnimations(list):
     # Move animation lists

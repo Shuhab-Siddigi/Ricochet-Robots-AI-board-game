@@ -25,21 +25,13 @@ def main():
         board_group.add(obstacle)
     
     player_group = pygame.sprite.Group()
-    color = 0
-    player = Player(board.graph, 0, 0, color)
-    player1 = Player(board.graph, 5, 9, color)
-    player2 = Player(board.graph, 3, 5, color)
-    player3 = Player(board.graph, 13, 13, color)
 
+    player = Player(board.graph, 0, 0, 0)
 
     # optimize_adjacency_list(board.graph)
     algorithms.solve("BFS", board.graph)
 
     player_group.add(player)
-    player_group.add(player1)
-    player_group.add(player2)
-    player_group.add(player3)
-
     
     def handle_events() -> None:
         """Handles all the different events in the game"""
