@@ -24,6 +24,8 @@ class Board(pygame.surface.Surface):
         self.graph = Board_graph()
         # Create list to hold all tiles for collison detection
         self.obstacles = []
+        # Create a list to hold all tokens for collision detection
+        self.tokens = {}
 
         # Draw objects on board
         for y in range(ROWS):
@@ -31,21 +33,26 @@ class Board(pygame.surface.Surface):
                 wall = level[y][x][:2]
                 token = level[y][x][2:4]
                 wall_image = images[wall]
-                
                 self.graph.add_edge(level, x, y)
-
+                
+                # Create a copy of image
+                image = wall_image.copy()
+                
                 if token != "--":
                     token_image = images[token]
-                    merged_image = wall_image.copy()
-                    rect = merged_image.get_rect(centerx=token_image.get_width()+MARGIN,centery=token_image.get_height()+MARGIN)
+                    rect = image.get_rect(centerx=token_image.get_width()+MARGIN,centery=token_image.get_height()+MARGIN)
                     #token_image.set_colorkey((255,255,255))
-                    merged_image.blit(token_image,rect)
-                    self.blit(merged_image, (x * TILE_SIZE, y * TILE_SIZE))
-                elif wall == 'C-':
+                    image.blit(token_image,rect)
+                    #self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
+                    if token not in self.tokens:
+                        self.tokens[token] = None
+                    self.tokens[token] = (x,y)
+
+                if wall == 'C-':
                     # Draw Wall
-                    self.blit(wall_image, (x * TILE_SIZE, y * TILE_SIZE))
+                    self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
                 else:
-                    self.obstacles.append(Obstacle(wall_image,x * TILE_SIZE, y * TILE_SIZE))
+                    self.obstacles.append(Obstacle(image,x * TILE_SIZE, y * TILE_SIZE))
                         
                 
         emblem = pygame.image.load("resources/DTU-logo.jpg")
