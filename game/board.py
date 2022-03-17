@@ -55,3 +55,6 @@ class Board(pygame.surface.Surface):
         emblem = pygame.image.load("resources/DTU-logo.jpg")
         emblem = pygame.transform.scale(emblem, (1.7 * TILE_SIZE, 1.7 * TILE_SIZE))
         self.obstacles.append(Obstacle(emblem,7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
+    
+    def inside_board(self,position):
+        return position[0] <= BOARD_WIDTH and position[0] > 0 and position[0] <= BOARD_HEIGHT and position[1] > 0

@@ -2,7 +2,7 @@ import pygame
 import sys
 from game import levels
 from game.board import Board
-from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from game.constants import BOARD_HEIGHT, BOARD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
 from logic import algorithms
 from logic.datastructures import optimize_adjacency_list
@@ -25,13 +25,17 @@ def main():
         board_group.add(obstacle)
     
     player_group = pygame.sprite.Group()
-
-    player = Player(board.graph, 0, 0, 0)
-
+    players = [
+        Player(board.graph, 0, 0, 0), 
+        #Player(board.graph, 5, 2, 2),
+        #Player(board.graph, 6, 4, 1),
+        #Player(board.graph, 7, 3, 0)
+    ]
+    
     # optimize_adjacency_list(board.graph)
     algorithms.solve("BFS", board.graph)
-
-    player_group.add(player)
+    for player in players:
+        player_group.add(player)
     
     def handle_events() -> None:
         """Handles all the different events in the game"""
@@ -41,10 +45,9 @@ def main():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                # clicked_obstacle = [o for o in board_group if o.rect.collidepoint(pos)]
-                # for sprite in clicked_obstacle:
-                # player.input(sprite.rect.topleft)
-                player.input(pos)
+                if board.inside_board(pos):
+                    players[0].input(pos)
+                    
 
     def draw():
         # Draw first screen
