@@ -41,9 +41,7 @@ class Board(pygame.surface.Surface):
                 if token != "--":
                     token_image = images[token]
                     rect = image.get_rect(centerx=token_image.get_width()+MARGIN,centery=token_image.get_height()+MARGIN)
-                    #token_image.set_colorkey((255,255,255))
-                    image.blit(token_image,rect)
-                    #self.blit(image, (x * TILE_SIZE, y * TILE_SIZE))
+                    image.blit(token_image,rect)                   
                     if token not in self.tokens:
                         self.tokens[token] = None
                     self.tokens[token] = (x,y)
