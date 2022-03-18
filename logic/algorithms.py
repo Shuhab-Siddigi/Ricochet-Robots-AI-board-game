@@ -152,7 +152,7 @@ def BFS(graph):
     finalPath.append(endState)
     currentState = endState
 
-    while Data.parentMap.get(currentState) != None:
+    while Data.parentMap.get(currentState) is not None:
         currentState = Data.parentMap.get(currentState)
         finalPath.insert(0, currentState)  # Is same as prepend
 

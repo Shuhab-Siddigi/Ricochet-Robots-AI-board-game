@@ -92,6 +92,7 @@ def main():
         handle_events()
         # Draw on screen
         draw()
+
         update()
 
 
