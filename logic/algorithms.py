@@ -12,6 +12,8 @@ class Data:
     activeRobot = None
     activeToken = None
 
+    parentMap = dict()
+
 
 def GetLegalMoves(state, parentState=None):
     moves = {}
@@ -98,9 +100,27 @@ def ConstructGUIPath(finalPath):
     return moves
 
 
+def stateAlreadyExplored(state):
+    if Data.parentMap.get(state) is not None:
+        return True
+
+    temp = list(state)
+    active_robot_location = state[Data.activeRobot]
+    del temp[Data.activeRobot]
+
+    state_permutations = list(itertools.permutations(temp))
+
+    for perm in state_permutations:
+        a = list(perm)
+        insert_at = Data.activeRobot
+        b = a[:]
+        b[insert_at:insert_at] = [active_robot_location]
+        if Data.parentMap.get(tuple(b)) is not None:
+            return True
+        
+
 def BFS(graph):
     start = time.time()
-    parentMap = dict()
     pathFound = False
     endState = None
     finalPath = []
@@ -109,20 +129,18 @@ def BFS(graph):
     Data.aiGraph = datastructures.optimize_adjacency_list(graph)
     setActiveRobot()
     queue.append(Data.startState)
-    parentMap[Data.startState] = None
+    Data.parentMap[Data.startState] = None
 
     while len(queue) != 0 and pathFound is False:
         currentState = queue.pop(0)
-        legalNewStates = GetLegalMoves(currentState, parentMap.get(currentState))
+        legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
         amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
-            # list(itertools.permutations([1, 2, 3, 4], 2))
-            # for i in range (0, 6):
-            if parentMap.get(state) is not None:  # Todo Make separate func
+            if stateAlreadyExplored(state):
                 continue
             pathFound = GoalTest(state)
             # print(" Testing ", state)
-            parentMap[state] = currentState
+            Data.parentMap[state] = currentState
             if (pathFound):
                 endState = state
                 end = time.time()
@@ -134,8 +152,8 @@ def BFS(graph):
     finalPath.append(endState)
     currentState = endState
 
-    while parentMap.get(currentState) != None:
-        currentState = parentMap.get(currentState)
+    while Data.parentMap.get(currentState) != None:
+        currentState = Data.parentMap.get(currentState)
         finalPath.insert(0, currentState)  # Is same as prepend
 
     print("Found solution in ", len(finalPath) - 1)
