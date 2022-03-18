@@ -1,4 +1,5 @@
 import random
+import time
 
 import pygame
 import sys
@@ -27,11 +28,18 @@ def main():
         board_group.add(obstacle)
     
     player_group = pygame.sprite.Group()
+    # players = [
+    #     Player(board.graph, 0, 0, 0),
+    #     Player(board.graph, 5, 2, 2),
+    #     Player(board.graph, 6, 4, 1),
+    #     Player(board.graph, 7, 3, 0)
+    # ]
+
     players = [
-        Player(board.graph, 0, 0, 0), 
-        Player(board.graph, 5, 2, 2),
-        Player(board.graph, 6, 4, 1),
-        Player(board.graph, 7, 3, 0)
+        Player(board.graph, random.randint(0, 15), random.randint(0, 15), 0),
+        Player(board.graph, random.randint(0, 15), random.randint(0, 15), 2),
+        Player(board.graph, random.randint(0, 15), random.randint(0, 15), 1),
+        Player(board.graph, random.randint(0, 15), random.randint(0, 15), 0)
     ]
 
     for player in players:
@@ -84,7 +92,6 @@ def main():
         handle_events()
         # Draw on screen
         draw()
-
         update()
 
 

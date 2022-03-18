@@ -117,7 +117,7 @@ def stateAlreadyExplored(state):
         b[insert_at:insert_at] = [active_robot_location]
         if Data.parentMap.get(tuple(b)) is not None:
             return True
-        
+
 
 def BFS(graph):
     start = time.time()
