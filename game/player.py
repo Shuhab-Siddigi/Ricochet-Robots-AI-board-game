@@ -51,7 +51,6 @@ class Player(pygame.sprite.Sprite):
     def up(self):
         self.position = self.travel(check_up, self.position)
         self.is_walking = True
-
     def down(self):
         self.position = self.travel(check_down, self.position)
         self.is_walking = True
@@ -73,12 +72,16 @@ class Player(pygame.sprite.Sprite):
         if not self.is_walking:
             if check_up(self.position, rect_position):  # Up
                 self.up()
+                return "UP"
             elif check_down(self.position, rect_position):  # Down
                 self.down()
+                return "DOWN"
             elif check_left(self.position, rect_position):  # Left
                 self.left()
+                return "LEFT"
             elif check_right(self.position, rect_position):  # Right
                 self.right()
+                return "RIGHT"
             else:
                 print("invalid move or arrow not pressed")
 

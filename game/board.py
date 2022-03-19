@@ -47,6 +47,8 @@ class Board(pygame.sprite.Group):
         self.players = []
         # add objects to board
         self.arrows = pygame.sprite.Group()
+        # Commands list
+        self.history = []
 
         for y in range(ROWS):
             for x in range(COLS):
@@ -80,25 +82,6 @@ class Board(pygame.sprite.Group):
         self.players = players
         self.add(players)
 
-    def events(self,mouse_position):
-        if not any(player.is_walking for player in self.players):
-            
-            for player in self.players:
-                if player.rect.collidepoint(mouse_position):
-                    [arrow.kill() for arrow in self.arrows]
-                    player.is_active = True
-                    self.create_arrows(player)
-
-                if self.has(self.arrows) and player.is_active:
-                    for arrow in self.arrows:
-                        if arrow.is_clicked() and player.is_active:
-                            player.input(mouse_position)
-                            [arrow.kill() for arrow in self.arrows]
-
-        if len(self.arrows.spritedict) == 0:
-            for player in self.players:
-                player.is_active = False
-
     def create_arrows(self, player):
 
         self.arrows = pygame.sprite.Group()
@@ -131,11 +114,42 @@ class Board(pygame.sprite.Group):
                                   player.rect.y))
 
         self.add(self.arrows)
+    
+    def draw_arrows(self,player,mouse_position):
+
+        if self.has(self.arrows) and player.is_active:
+            for arrow in self.arrows:
+                if arrow.is_clicked() and player.is_active:
+                    move = player.input(mouse_position)
+                    [arrow.kill() for arrow in self.arrows]
+                    if player == self.players[0]:
+                        self.history.append((0,move))
+                    if player == self.players[1]:
+                        self.history.append((1,move))
+                    if player == self.players[2]:
+                        self.history.append((3,move))
+                    if player == self.players[3]:
+                        self.history.append((4,move))
+        
+        elif player.rect.collidepoint(mouse_position):
+                [arrow.kill() for arrow in self.arrows]
+                player.is_active = True
+                self.create_arrows(player)
+
+        elif len(self.arrows.spritedict) == 0:
+                for player in self.players:
+                    player.is_active = False
+
+    def events(self,mouse_position):
+        if not any(player.is_walking for player in self.players):
+            for player in self.players:
+                self.draw_arrows(player,mouse_position)
 
     def commands(self, commands, players):
         if not any(player.is_walking for player in players):
             if len(commands) != 0:
                 command = commands.pop(0)
+                self.history.append(command)
                 player = command[0]
                 action = command[1]
                 p = players[player]
