@@ -43,10 +43,22 @@ class Images(Dict):
         ]
 
         arrows = [
-            "UP",
-            "DOWN",
-            "LEFT",
-            "RIGHT",
+            "BUP",
+            "BDOWN",
+            "BLEFT",
+            "BRIGHT",
+            "GUP",
+            "GDOWN",
+            "GLEFT",
+            "GRIGHT",
+            "RUP",
+            "RDOWN",
+            "RLEFT",
+            "RRIGHT",
+            "YUP",
+            "YDOWN",
+            "YLEFT",
+            "YRIGHT",
         ]
 
         for wall in walls:

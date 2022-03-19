@@ -116,7 +116,7 @@ class Player(pygame.sprite.Sprite):
 
     def update_positions(self):
         self.player_positions = [player.position for player in self.players]
-
+    
     def update(self):
         self.movement()
         self.animate()

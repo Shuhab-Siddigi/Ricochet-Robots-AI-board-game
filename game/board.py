@@ -90,34 +90,63 @@ class Board(pygame.sprite.Group):
         start = player.rect.y - TILE_SIZE
         end = target[1] * TILE_SIZE
         for position in range(start, end - TILE_SIZE, -TILE_SIZE):
-            self.arrows.add(Arrow(self.images["UP"], player.rect.x, position))
+            if player == self.players[0]:
+                self.arrows.add(Arrow(self.images["RUP"], player.rect.x, position))
+            elif player == self.players[1]:
+                self.arrows.add(Arrow(self.images["BUP"], player.rect.x, position))
+            elif player == self.players[2]:
+                self.arrows.add(Arrow(self.images["GUP"], player.rect.x, position))
+            elif player == self.players[3]:
+                self.arrows.add(Arrow(self.images["YUP"], player.rect.x, position))
 
         target = player.travel(check_down, player.position)
         start = player.rect.y + TILE_SIZE
         end = target[1] * TILE_SIZE
         for position in range(start, end + TILE_SIZE, TILE_SIZE):
-            self.arrows.add(Arrow(self.images["DOWN"], player.rect.x,
-                                  position))
+            if player == self.players[0]:
+                self.arrows.add(Arrow(self.images["RDOWN"], player.rect.x,position))
+            elif player == self.players[1]:
+                self.arrows.add(Arrow(self.images["BDOWN"], player.rect.x,position))
+            elif player == self.players[2]:
+                self.arrows.add(Arrow(self.images["GDOWN"], player.rect.x,position))
+            elif player == self.players[3]:
+                self.arrows.add(Arrow(self.images["YDOWN"], player.rect.x,position))
 
         target = player.travel(check_right, player.position)
         start = player.rect.x + TILE_SIZE
         end = target[0] * TILE_SIZE
         for position in range(start, end + TILE_SIZE, TILE_SIZE):
-            self.arrows.add(
-                Arrow(self.images["RIGHT"], position, player.rect.y))
+            if player == self.players[0]:
+                self.arrows.add(Arrow(self.images["RRIGHT"], position, player.rect.y))
+            elif player == self.players[1]:
+                self.arrows.add(Arrow(self.images["BRIGHT"], position, player.rect.y))
+            elif player == self.players[2]:
+                self.arrows.add(Arrow(self.images["GRIGHT"], position, player.rect.y))
+            elif player == self.players[3]:
+                self.arrows.add(Arrow(self.images["YRIGHT"], position, player.rect.y))
 
         target = player.travel(check_left, player.position)
         start = player.rect.x - TILE_SIZE
         end = target[0] * TILE_SIZE
         for position in range(start, end - TILE_SIZE, -TILE_SIZE):
-            self.arrows.add(Arrow(self.images["LEFT"], position,
-                                  player.rect.y))
+            if player == self.players[0]:
+                self.arrows.add(Arrow(self.images["RLEFT"], position,player.rect.y))
+            elif player == self.players[1]:
+                self.arrows.add(Arrow(self.images["BLEFT"], position,player.rect.y))
+            elif player == self.players[2]:
+                self.arrows.add(Arrow(self.images["GLEFT"], position,player.rect.y))
+            elif player == self.players[3]:
+                self.arrows.add(Arrow(self.images["YLEFT"], position,player.rect.y))
 
         self.add(self.arrows)
     
     def draw_arrows(self,player,mouse_position):
+        if player.rect.collidepoint(mouse_position):
+                [arrow.kill() for arrow in self.arrows]
+                player.is_active = True
+                self.create_arrows(player)
 
-        if self.has(self.arrows) and player.is_active:
+        elif self.has(self.arrows) and player.is_active:
             for arrow in self.arrows:
                 if arrow.is_clicked() and player.is_active:
                     move = player.input(mouse_position)
@@ -131,15 +160,11 @@ class Board(pygame.sprite.Group):
                     if player == self.players[3]:
                         self.history.append((4,move))
         
-        elif player.rect.collidepoint(mouse_position):
-                [arrow.kill() for arrow in self.arrows]
-                player.is_active = True
-                self.create_arrows(player)
 
         elif len(self.arrows.spritedict) == 0:
                 for player in self.players:
                     player.is_active = False
-
+    
     def events(self,mouse_position):
         if not any(player.is_walking for player in self.players):
             for player in self.players:
