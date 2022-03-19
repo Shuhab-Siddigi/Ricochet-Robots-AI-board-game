@@ -2,7 +2,7 @@ from turtle import width
 from matplotlib.font_manager import get_font
 import pygame
 
-from game.constants import BOARD_WIDTH, TILE_SIZE, UI_HEIGHT, UI_WIDTH
+from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH
 from game.images import Images
 from game.ui import get_font
 
@@ -22,8 +22,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-
-class Button(pygame.sprite.Sprite):
+class Object(pygame.sprite.Sprite):
 
     def __init__(self, image, x, y):
         super().__init__()
@@ -55,26 +54,26 @@ class UI(pygame.sprite.Group):
         images = Images()
         
         self.background(images)
+        image = get_font("Moves", 40, 'White')
+        self.moves = Object(image, BOARD_WIDTH + UI_WIDTH // 2 - image.get_width() // 2, 10)
+        self.add(self.moves)
         
-        self.moves = get_font("Moves", 40, 'White')
-        self.button = Button(self.moves, BOARD_WIDTH + UI_WIDTH // 2 - self.moves.get_width() // 2, 15)
-        
-        
-        self.counter = Counter(
-            get_font(str(0),60,'White'),
-            BOARD_WIDTH + UI_WIDTH // 2-10, 
-            50
-        )
-        
-        self.add(self.button)
+        self.counter = Counter(get_font(str(0),60,'White'), BOARD_WIDTH + UI_WIDTH // 2-10, 49)
         self.add(self.counter)
-        # Draw text
-        #self.blit(moves,(UI_WIDTH//2-moves.get_width()//2,15))
+        
+        image = get_font(" Player      AI", 31, 'White')
+        self.player_text = Object(image, BOARD_WIDTH + MARGIN*3, 110)
+        self.add(self.player_text)
+        
+        knucles = pygame.image.load("resources/knuckles.png")
+        knucles = pygame.transform.scale(knucles,(TILE_SIZE,TILE_SIZE-MARGIN))
+        player_image = Object(knucles,BOARD_WIDTH+28,150)
+        self.add(player_image)
 
-        #font = pygame.font.Font("resources/Atarian.ttf",30)
-        #self.moves = font.render('CHOSE PLAYER' , True , 'White')
-        #self.blit(moves,(UI_WIDTH//2-moves.get_width()//2,100))
-
+        ai = pygame.image.load("resources/robot.png")
+        ai = pygame.transform.scale(ai,(TILE_SIZE-MARGIN,TILE_SIZE-MARGIN))
+        ai_image = Object(ai,BOARD_WIDTH+125,150)
+        self.add(ai_image)
     
     def background(self,images):
         self.add(Tile(images["NW"],BOARD_WIDTH,0))
@@ -89,6 +88,6 @@ class UI(pygame.sprite.Group):
 
 
     def events(self, mouse_pos):
-        if self.button.rect.collidepoint(mouse_pos):
+        if self.moves.rect.collidepoint(mouse_pos):
             print("mouse is over moves")
     
