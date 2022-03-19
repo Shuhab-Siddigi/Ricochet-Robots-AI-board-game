@@ -27,7 +27,10 @@ def main():
     start_positions =[]
     
     for _ in range(4):
-        start_positions.append(random.randint(0,16))
+        start_positions.append(
+            (random.randint(0,16),
+            random.randint(0,16))
+        )
     
     players = [
         Player(board.graph, start_positions[0], 0),
