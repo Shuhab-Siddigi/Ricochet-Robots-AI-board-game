@@ -50,10 +50,10 @@ def main():
     commands = []
 
     token = random.choice(list(board.tokens.keys()))
-    # goal = board.tokens[token]
+    goal = board.tokens[token]
     # print(goal)
 
-    # commands = ai.solve("BFS", board.graph, players, goal)
+    #commands = ai.solve("BFS", board.graph, players, goal)
 
     def handle_events() -> None:
         """Handles all the different events in the game"""
@@ -76,7 +76,7 @@ def main():
         board.update()
         ui.update()
         #ui.counter.number = len(board.history)
-        
+        print(board.history)
         ui.set_target(token)
         pygame.display.update()
         clock.tick(60)

@@ -1,5 +1,3 @@
-from turtle import width
-from matplotlib.font_manager import get_font
 import pygame
 
 from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH
