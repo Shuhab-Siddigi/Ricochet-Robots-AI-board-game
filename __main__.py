@@ -7,7 +7,7 @@ from game import levels
 from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
-from game.ui import UI
+from game.ui import Display
 from logic import ai
 
 
@@ -21,7 +21,7 @@ def main():
     clock = pygame.time.Clock()  # Used to manage how fast the screen updates
 
     board = Board(levels.Level0)
-    ui = UI()
+    display = Display()
     counter = 0
 
     #start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
@@ -57,7 +57,6 @@ def main():
         for event in pygame.event.get():  # All user events
             mouse_position = pygame.mouse.get_pos()
             board.events(mouse_position)
-            ui.events(mouse_position)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -65,16 +64,15 @@ def main():
     def draw():
         # Draw first screen
         board.draw(screen)
-        ui.draw(screen)
-
+        display.draw(screen)
+ 
     def update():
         board.commands(commands, players)
         # Update all objects in board
         board.update()
-        ui.update()
-        #ui.counter.number = len(board.history)
-        print(board.history)
-        ui.set_target(token)
+        display.update()
+        display.set_token(token)
+ 
         pygame.display.update()
         clock.tick(60)
 
