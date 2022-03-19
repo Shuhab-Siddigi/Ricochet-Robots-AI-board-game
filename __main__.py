@@ -1,5 +1,6 @@
 import pprint
 import random
+import time
 
 import pygame
 import sys
@@ -22,7 +23,11 @@ def main():
 
     board = Board(levels.Level0)
     ui = UI()
-    start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
+    #start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
+    start_positions =[]
+    
+    for _ in range(4):
+        start_positions.append(random.randint(0,16))
     
     players = [
         Player(board.graph, start_positions[0], 0),
