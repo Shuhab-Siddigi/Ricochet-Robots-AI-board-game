@@ -75,7 +75,6 @@ class UI(pygame.sprite.Group):
         #self.moves = font.render('CHOSE PLAYER' , True , 'White')
         #self.blit(moves,(UI_WIDTH//2-moves.get_width()//2,100))
 
-
     
     def background(self,images):
         self.add(Tile(images["NW"],BOARD_WIDTH,0))
@@ -92,5 +91,4 @@ class UI(pygame.sprite.Group):
     def events(self, mouse_pos):
         if self.button.rect.collidepoint(mouse_pos):
             print("mouse is over moves")
-            self.counter.number += 1
     

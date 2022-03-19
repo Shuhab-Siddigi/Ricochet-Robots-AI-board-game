@@ -23,6 +23,8 @@ def main():
 
     board = Board(levels.Level0)
     ui = UI()
+    counter = 0
+    
     #start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
     start_positions =[]
     
@@ -47,14 +49,15 @@ def main():
     # Create a list of commands for the players
     commands = []
 
-    token = random.choice(list(board.tokens.keys()))
-    goal = board.tokens[token]
-    print(goal)
+    # token = random.choice(list(board.tokens.keys()))
+    # goal = board.tokens[token]
+    # print(goal)
 
-    commands = ai.solve("BFS", board.graph, players, goal)
-
+    # commands = ai.solve("BFS", board.graph, players, goal)
+    
     def handle_events() -> None:
         """Handles all the different events in the game"""
+        counter = 0
         for event in pygame.event.get():  # All user events
             mouse_position = pygame.mouse.get_pos()
             board.events(mouse_position)
@@ -62,6 +65,8 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                ui.counter.number += 1
 
     def draw():
         # Draw first screen
@@ -84,7 +89,7 @@ def main():
         draw()
         # Update
         update()
-
+        
 
 if __name__ == "__main__":
     main()
