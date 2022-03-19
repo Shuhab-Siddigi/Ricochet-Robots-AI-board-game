@@ -2,7 +2,6 @@ import pygame
 
 from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH
 from game.images import Images
-from game.ui import get_font
 
 def get_font(text, size, color):
     # Get UI Font

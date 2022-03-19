@@ -1,9 +1,8 @@
-import pprint
 import random
-import time
+import sys
 
 import pygame
-import sys
+
 from game import levels
 from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
@@ -24,16 +23,13 @@ def main():
     board = Board(levels.Level0)
     ui = UI()
     counter = 0
-    
+
     #start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
-    start_positions =[]
-    
+    start_positions = []
+
     for _ in range(4):
-        start_positions.append(
-            (random.randint(0,15),
-            random.randint(0,15))
-        )
-    
+        start_positions.append((random.randint(0, 15), random.randint(0, 15)))
+
     players = [
         Player(board.graph, start_positions[0], 0),
         Player(board.graph, start_positions[1], 2),
@@ -51,6 +47,7 @@ def main():
 
     token = random.choice(list(board.tokens.keys()))
     goal = board.tokens[token]
+
     # print(goal)
 
     #commands = ai.solve("BFS", board.graph, players, goal)
@@ -89,7 +86,7 @@ def main():
         draw()
         # Update
         update()
-        
+
 
 if __name__ == "__main__":
     main()
