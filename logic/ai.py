@@ -165,10 +165,77 @@ def BFS(graph):
     return ConstructGUIPath(finalPath)
 
 
-def a_star():
+def a_star(graph):
+    start = time.time()
+    pathFound = False
+    endState = None
+    finalPath = []
+    queue = []
+    amount_of_states_considered = 0
+    Data.aiGraph = datastructures.optimize_adjacency_list(graph)
+    heuristic = datastructures.get_astar_heuristic_dict(graph, Data.activeToken)
+    queue.append((Data.startState, 0))
+    Data.parentMap[Data.startState] = None
 
-    pass
+    while len(queue) != 0 and pathFound is False:
+        currentState = queue.pop(0)[0]
+        legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
+        amount_of_states_considered += len(legalNewStates)
+        for state in legalNewStates:
+            if stateAlreadyExplored(state):
+                continue
+            pathFound = GoalTest(state)
+            # print(" Testing ", state)
+            Data.parentMap[state] = currentState
+            if (pathFound):
+                endState = state
+                end = time.time()
+                print("Found goal state with ", amount_of_states_considered, " states considered")
+                print("Time elapsed:", end - start, "seconds")
+                break
+            cost = heuristic.get(state[Data.activeRobot]) + get_depth(state)
+            if len(queue) == 0:
+                queue.insert(0, (state, cost))
+            else:
+                index = binary_search_recursive(queue, cost, 0, len(queue))
+                queue.insert(index, (state, cost))
 
+    finalPath.append(endState)
+    currentState = endState
+
+    while Data.parentMap.get(currentState) is not None:
+        currentState = Data.parentMap.get(currentState)
+        finalPath.insert(0, currentState)  # Is same as prepend
+
+    print("Found solution in ", len(finalPath) - 1)
+    print("\n Path: \n")
+    pprint.pprint(finalPath)
+    print(ConstructGUIPath(finalPath))
+    return ConstructGUIPath(finalPath)
+
+def get_depth(state):
+    counter = 0
+    currentState = state
+    while Data.parentMap.get(currentState) is not None:
+        counter += 1
+        currentState = Data.parentMap.get(currentState)
+    return counter
+
+def binary_search_recursive(array, element, start, end):
+    if start > end:
+        return start
+
+    if start == end:
+        return start
+
+    mid = (start + end) // 2
+    if element == array[mid][1]:
+        return mid
+
+    if element < array[mid][1]:
+        return binary_search_recursive(array, element, start, mid-1)
+    else:
+        return binary_search_recursive(array, element, mid+1, end)
 
 def solve(algorithm, graph, players, token_color, goal):
     if len(players) == 4:
@@ -178,12 +245,13 @@ def solve(algorithm, graph, players, token_color, goal):
         Data.startState = tuple(temp)
         Data.activeToken = goal
         setActiveRobot(token_color)
+        Data.parentMap.clear()
 
     if algorithm == "BFS":
         print("BFS")
         return BFS(graph)
 
         # return BFS()
-    if algorithm == "AStar":
-        print("AStar")
-        # return AStar()
+    if algorithm == "a_star":
+        print("a_star")
+        return a_star(graph)
