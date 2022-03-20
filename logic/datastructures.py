@@ -4,6 +4,7 @@ from typing import Dict
 import copy
 
 from game.constants import COLS, ROWS
+from logic.ai import Data
 from logic.algorithms import *
 
 
@@ -118,13 +119,42 @@ def optimize_adjacency_list(graph):
     g = copy.deepcopy(graph)
     optimized_graph = Graph()
     for key in g.keys():
-        if (travel(g, check_left, key) != key):
+        if travel(g, check_left, key) != key:
             optimized_graph.add(key, travel(g, check_left, key))
-        if (travel(g, check_right, key) != key):
+        if travel(g, check_right, key) != key:
             optimized_graph.add(key, travel(g, check_right, key))
-        if (travel(g, check_up, key) != key):
+        if travel(g, check_up, key) != key:
             optimized_graph.add(key, travel(g, check_up, key))
-        if (travel(g, check_down, key) != key):
+        if travel(g, check_down, key) != key:
             optimized_graph.add(key, travel(g, check_down, key))
 
     return optimized_graph
+
+
+def get_astar_heuristic_dict(graph, goal):
+    g = copy.deepcopy(graph)
+
+    a_star_heuristic = {}
+    queue = []
+    nextQueue = []
+    counter = 0
+    queue.append(goal)
+    a_star_heuristic[goal] = 0
+
+    while len(queue) != 0:
+        for position in queue:
+            a_star_heuristic, nextQueue = \
+                travel_a_star(g, check_left, position, a_star_heuristic, nextQueue, counter+1)
+            a_star_heuristic, nextQueue = \
+                travel_a_star(g, check_right, position, a_star_heuristic, nextQueue, counter+1)
+            a_star_heuristic, nextQueue = \
+                travel_a_star(g, check_up, position, a_star_heuristic, nextQueue, counter+1)
+            a_star_heuristic, nextQueue = \
+                travel_a_star(g, check_down, position, a_star_heuristic, nextQueue, counter+1)
+        queue.clear()
+        for x in nextQueue:
+            queue.append(x)
+        nextQueue.clear()
+        counter += 1
+
+    return a_star_heuristic

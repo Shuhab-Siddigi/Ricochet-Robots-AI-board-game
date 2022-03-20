@@ -1,3 +1,4 @@
+import pprint
 import random
 import sys
 
@@ -9,6 +10,7 @@ from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from game.player import Player
 from game.ui import Display
 from logic import ai
+from logic.datastructures import get_astar_heuristic_dict
 
 
 def main():
@@ -46,11 +48,13 @@ def main():
     commands = []
 
     token = random.choice(list(board.tokens.keys()))
+    token_color = token
     goal = board.tokens[token]
 
-    # print(goal)
-
-    #commands = ai.solve("BFS", board.graph, players, goal)
+    commands = ai.solve("BFS", board.graph, players, token_color, goal)
+    test = get_astar_heuristic_dict(board.graph, goal)
+    print("goal: ", goal)
+    pprint.pprint(test)
 
     def handle_events() -> None:
         """Handles all the different events in the game"""
