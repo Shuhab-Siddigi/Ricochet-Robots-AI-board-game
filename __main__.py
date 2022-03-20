@@ -13,6 +13,14 @@ from logic import ai
 from logic.datastructures import get_astar_heuristic_dict
 
 
+def get_random_pos(start, end):
+    position = (random.randint(start, end), random.randint(start, end))
+    if position != (7, 7) or position != (8, 7) or position != (8, 8) or position != (8, 8):
+        return position
+    else:
+        return get_random_pos(start, end)
+
+
 def main():
     """ Ricochet Robot AI board game """
     pygame.init()  # Initialize pygame
@@ -26,11 +34,11 @@ def main():
     display = Display()
     counter = 0
 
-    #start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
+    # start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
     start_positions = []
 
     for _ in range(4):
-        start_positions.append((random.randint(0, 15), random.randint(0, 15)))
+        start_positions.append(get_random_pos(0, 15))
 
     players = [
         Player(board.graph, start_positions[0], 0),
@@ -60,8 +68,6 @@ def main():
     players[2].position = start_positions[2]
     players[3].position = start_positions[3]
 
-
-
     commands = ai.solve("a_star", board.graph, players, token_color, goal)
 
     # commands = ai.solve("BFS", board.graph, players, token_color, goal)
@@ -83,14 +89,14 @@ def main():
         # Draw first screen
         board.draw(screen)
         display.draw(screen)
- 
+
     def update():
         board.commands(commands, players)
         # Update all objects in board
         board.update()
         display.update()
         display.set_token(token)
- 
+
         pygame.display.update()
         clock.tick(60)
 
