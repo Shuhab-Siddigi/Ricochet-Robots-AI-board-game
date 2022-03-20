@@ -35,8 +35,8 @@ def main():
     display = Display(board)
     
     # Test AI (Prefix has to be set)
-    #goal = board.tokens[token]
-    #board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
+    goal = board.tokens[token]
+    board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
     
     def handle_events() -> None:
         """Handles all the different events in the game"""
@@ -73,24 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
- 
-    #token_color = token
-    #goal = board.tokens[token]
-
-    #print("token: ", goal)
-
-    #test = ai.solve("BFS", board.graph, players, token_color, goal)
-
-    # players[0].position = start_positions[0]
-    # players[1].position = start_positions[1]
-    # players[2].position = start_positions[2]
-    # players[3].position = start_positions[3]
-
-    #
-
-    # commands = ai.solve("BFS", board.graph, players, token_color, goal)
-    # test = get_astar_heuristic_dict(board.graph, goal)
-    # print("goal: ", goal)
-    # pprint.pprint(test)

@@ -127,7 +127,14 @@ class Display():
         x = self.surface.get_width()//2+self.surface.get_width()//4
         self.surface.blit(ai,(x-ai.get_width()//2,245))
 
-         
+
+        x = BOARD_WIDTH-5+self.surface.get_width()//2+self.surface.get_width()//4
+        width = 100
+        height = 25
+        pos = (x-width//2,310)
+        self.bfs_button = Button(pos,width,height,'Red','Green',"BFS","OK",30,board.bfs)
+        pos = (x-width//2,360)
+        self.astar_button = Button(pos,width,height,'Red','Green',"A-Star","OK",30,board.a_star)
         
 
         x = BOARD_WIDTH+self.surface.get_width()//2
@@ -138,8 +145,9 @@ class Display():
 
         # add sprites
         self.sprite_group.add(self.token)
-
         self.sprite_group.add(self.reset_button)
+        self.sprite_group.add(self.bfs_button)
+        self.sprite_group.add(self.astar_button)
     
     def background(self,surface,images):
         E  = pygame.transform.scale(images["E-"],(2*TILE_SIZE,2*TILE_SIZE))
@@ -181,6 +189,8 @@ class Display():
            
     def events(self,event):
         self.reset_button.handle_event(event)
+        self.bfs_button.handle_event(event)
+        self.astar_button.handle_event(event)
 
     def update(self):
         self.sprite_group.update()

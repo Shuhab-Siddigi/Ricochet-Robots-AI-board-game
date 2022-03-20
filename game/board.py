@@ -5,6 +5,7 @@ import pygame
 from game.constants import COLS, MARGIN, ROWS, TILE_SIZE
 from game.images import Images
 from game.player import Player
+from logic import ai
 from logic.datastructures import Board_graph
 from logic.algorithms import check_down, check_left, check_right, check_up
 from game.images import Images
@@ -222,6 +223,13 @@ class Board():
             if action == "Right":
                 p.right()
 
+    def a_star(self):
+        goal = self.tokens[self.token]
+        self.commands = ai.solve("a_star", self.graph, self.players, self.token, goal)
+    
+    def bfs(self):
+        goal = self.tokens[self.token]
+        self.commands = ai.solve("BFS", self.graph, self.players, self.token, goal)
 
     def events(self,event):
         mouse_position = pygame.mouse.get_pos()
