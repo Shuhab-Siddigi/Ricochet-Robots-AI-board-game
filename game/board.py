@@ -1,7 +1,10 @@
+from math import fabs
+import random
 import pygame
 
 from game.constants import COLS, MARGIN, ROWS, TILE_SIZE
 from game.images import Images
+from game.player import Player
 from logic.datastructures import Board_graph
 from logic.algorithms import check_down, check_left, check_right, check_up
 from game.images import Images
@@ -21,7 +24,6 @@ class Arrow(pygame.sprite.Sprite):
         return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(
             pygame.mouse.get_pos())
 
-
 class Obstacle(pygame.sprite.Sprite):
 
     def __init__(self, image, x, y):
@@ -32,10 +34,10 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class Board(pygame.sprite.Group):
+class Board():
     """A Board object for the game """
 
-    def __init__(self, level: list):
+    def __init__(self, level: list,positions=None,token=None):
         super().__init__()
         # Load Images
         self.images = Images()
@@ -43,13 +45,44 @@ class Board(pygame.sprite.Group):
         self.graph = Board_graph()
         # Create a list to hold all tokens for collision detection
         self.tokens = {}
+        # Create group to hold sprites
+        self.sprite_group = pygame.sprite.Group()
+        # feed adjacency list
+        self.create_board(level)
+        # Check if there is a token or generate it
+        self.token = token
+        if token == None:
+            self.token = random.choice(list(self.tokens.keys()))
+         # Check if there is a list of positions or generate it
+        self.start_positions = positions
+        if self.start_positions == None:
+            self.start_positions = []
+            self.get_random_pos(0, 15,self.start_positions)
+        
         # Create list of players
         self.players = []
         # add objects to board
         self.arrows = pygame.sprite.Group()
         # Commands list
+        self.commands = []
         self.history = []
+        self.reverse = False
 
+        self.players = [
+            Player(self.graph, self.start_positions[0], 0),
+            Player(self.graph, self.start_positions[1], 2),
+            Player(self.graph, self.start_positions[2], 1),
+            Player(self.graph, self.start_positions[3], 0)
+        ]
+
+        for player in self.players:
+            # add players to other players
+            player.players = self.players
+            # Add players to board
+            self.sprite_group.add(player)
+        
+
+    def create_board(self,level):
         for y in range(ROWS):
             for x in range(COLS):
                 self.graph.add_edge(level, x, y)
@@ -71,19 +104,25 @@ class Board(pygame.sprite.Group):
                         self.tokens[token] = None
                     self.tokens[token] = (x, y)
 
-                self.add(Obstacle(image, x * TILE_SIZE, y * TILE_SIZE))
+                self.sprite_group.add(Obstacle(image, x * TILE_SIZE, y * TILE_SIZE))
 
         emblem = pygame.image.load("resources/DTU-logo.jpg")
-        emblem = pygame.transform.scale(emblem,
-                                        (1.7 * TILE_SIZE, 1.7 * TILE_SIZE))
-        self.add(Obstacle(emblem, 7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
+        emblem = pygame.transform.scale(emblem,(1.7 * TILE_SIZE, 1.7 * TILE_SIZE))
+        self.sprite_group.add(Obstacle(emblem, 7 * TILE_SIZE + 8, 7 * TILE_SIZE + 8))
 
-    def add_players(self, players):
-        self.players = players
-        self.add(players)
+
+
+    def get_random_pos(self,start, end,positions):
+        position = (random.randint(start, end), random.randint(start, end))
+        if position != (7, 7) or position != (8, 7) or position != (8, 8) or position != (8, 8):
+            if position not in positions:
+                positions.append(position)
+                return self.get_random_pos(start, end,positions)
+        if len(positions) == 4:
+            return positions
 
     def create_arrows(self, player):
-
+        
         self.arrows = pygame.sprite.Group()
 
         target = player.travel(check_up, player.position)
@@ -138,7 +177,7 @@ class Board(pygame.sprite.Group):
             elif player == self.players[3]:
                 self.arrows.add(Arrow(self.images["YLEFT"], position,player.rect.y))
 
-        self.add(self.arrows)
+        self.sprite_group.add(self.arrows)
     
     def draw_arrows(self,player,mouse_position):
         if player.rect.collidepoint(mouse_position):
@@ -146,7 +185,7 @@ class Board(pygame.sprite.Group):
                 player.is_active = True
                 self.create_arrows(player)
 
-        elif self.has(self.arrows) and player.is_active:
+        elif self.sprite_group.has(self.arrows) and player.is_active:
             for arrow in self.arrows:
                 if arrow.is_clicked() and player.is_active:
                     move = player.input(mouse_position)
@@ -156,35 +195,48 @@ class Board(pygame.sprite.Group):
                     if player == self.players[1]:
                         self.history.append((1,move))
                     if player == self.players[2]:
-                        self.history.append((3,move))
+                        self.history.append((2,move))
                     if player == self.players[3]:
-                        self.history.append((4,move))
+                        self.history.append((3,move))
         
 
         elif len(self.arrows.spritedict) == 0:
                 for player in self.players:
                     player.is_active = False
     
+    def actions(self):
+        if not any(player.is_walking for player in self.players):
+            print(self.commands)
+            command = self.commands.pop(0)
+            self.history.append(command)
+            player = command[0]
+            action = command[1]
+            p = self.players[player]
+
+            if action == "Up":
+                p.up()
+            if action == "Down":
+                p.down()
+            if action == "Left":
+                p.left()
+            if action == "Right":
+                p.right()
+
+
     def events(self,event):
         mouse_position = pygame.mouse.get_pos()
+        
         if not any(player.is_walking for player in self.players):
             for player in self.players:
+                
                 self.draw_arrows(player,mouse_position)
 
-    def commands(self, commands, players):
-        if not any(player.is_walking for player in players):
-            if len(commands) != 0:
-                command = commands.pop(0)
-                self.history.append(command)
-                player = command[0]
-                action = command[1]
-                p = players[player]
-
-                if action == "Up":
-                    p.up()
-                if action == "Down":
-                    p.down()
-                if action == "Left":
-                    p.left()
-                if action == "Right":
-                    p.right()
+    def update(self):
+        self.sprite_group.update()
+        if len(self.commands) != 0:
+            print(self.commands)
+            self.actions()
+    
+    def draw(self,screen):
+        self.sprite_group.draw(screen)
+  

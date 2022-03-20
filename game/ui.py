@@ -3,6 +3,7 @@ import pygame
 
 from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH
 from game.images import Images
+from game.board import Board
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, pos,width,height,first_color,second_color,first_text,second_text,size,callback):
@@ -43,7 +44,7 @@ class Button(pygame.sprite.Sprite):
      
         if not event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(pygame.mouse.get_pos()):
             self.draw_button(self.text_1,'Red','Black')
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(pygame.mouse.get_pos()):
             if event.button == 1:
                 self.draw_button(self.text_2,'Green','Black')
                 if self.rect.collidepoint(event.pos):
@@ -76,7 +77,10 @@ class Token(pygame.sprite.Sprite):
             self.image = self.token
 
 class Display():
-    def __init__(self):
+    def __init__(self,board:Board):
+        
+        self.board = board
+
         self.surface = pygame.Surface((UI_WIDTH,UI_HEIGHT))
         self.surface.fill('White')
         
@@ -89,28 +93,48 @@ class Display():
         player_text = self.get_font("Player      AI  ", 32, 'White')
         boarder = self.target_boarder(self.images)
         knucles = pygame.image.load("resources/knuckles.png")
-        knucles = pygame.transform.scale(knucles,(TILE_SIZE,TILE_SIZE-MARGIN))
+        knucles = pygame.transform.scale(knucles,(TILE_SIZE,TILE_SIZE))
+        robot = pygame.image.load("resources/robot.png")
         ai = pygame.image.load("resources/robot.png")
-        ai = pygame.transform.scale(ai,(TILE_SIZE-MARGIN,TILE_SIZE-MARGIN))
-        
         
         # Create background
         self.background(self.surface,self.images)
         # Draw images on surface
-        self.surface.blit(target_text,(self.surface.get_width()//2-target_text.get_width()//2,0))
-        self.surface.blit(boarder,(self.surface.get_width()//2-boarder.get_width()//2,50))
-        self.token = Token(BOARD_WIDTH+2*MARGIN+self.surface.get_width()//2-boarder.get_width()//2,60)
-        self.surface.blit(player_text,(self.surface.get_width()//2-player_text.get_width()//2,165))
-        self.surface.blit(knucles,(self.surface.get_width()//4-knucles.get_width()//2,210))        
+        for x in range(4):
+            if x == 0:
+                text = self.get_font(str(x+1),25,'White')
+                self.surface.blit(text,(x*45+31,10))
+                pygame.draw.circle(self.surface, 'Red', (x*45+33,50),10)
+            if x == 1:
+                text = self.get_font(str(x+1),25,'White')
+                self.surface.blit(text,(x*45+28,10))
+                pygame.draw.circle(self.surface, 'Blue', (x*45+33,50),10)
+            if x == 2:
+                text = self.get_font(str(x+1),25,'White')
+                self.surface.blit(text,(x*45+27,10))
+                pygame.draw.circle(self.surface, 'Green', (x*45+33,50),10)
+            if x == 3:
+                text = self.get_font(str(x+1),25,'White')
+                self.surface.blit(text,(x*45+26,10))
+                pygame.draw.circle(self.surface, 'Yellow', (x*45+33,50),10)
+
+        self.surface.blit(target_text,(self.surface.get_width()//2-target_text.get_width()//2,60))
+        self.surface.blit(boarder,(self.surface.get_width()//2-boarder.get_width()//2,110))
+        self.token = Token(BOARD_WIDTH+2*MARGIN+self.surface.get_width()//2-boarder.get_width()//2,120)
+
+        self.surface.blit(player_text,(self.surface.get_width()//2-player_text.get_width()//2,210))
+        self.surface.blit(knucles,(self.surface.get_width()//4-knucles.get_width()//2,240))        
         x = self.surface.get_width()//2+self.surface.get_width()//4
-        self.surface.blit(ai,(x-ai.get_width()//2,210))
+        self.surface.blit(ai,(x-ai.get_width()//2,245))
+
+         
         
-        def callback(): print("Button clicked")
+
         x = BOARD_WIDTH+self.surface.get_width()//2
         width = 120
         height = 50
         pos = (x-width//2,UI_HEIGHT-height-MARGIN*2)
-        self.reset_button = Button(pos,width,height,'Red','Green',"Reset","OK",30,callback)
+        self.reset_button = Button(pos,width,height,'Red','Green',"Reset","OK",30,self.reset)
 
         # add sprites
         self.sprite_group.add(self.token)
@@ -144,16 +168,23 @@ class Display():
         surface.blit(images["SE"],(TILE_SIZE,TILE_SIZE))
         return surface
     
-    def set_token(self,token):
-        token = self.images[token]
+    def set_token(self):
+        token = self.images[self.board.token]
         self.token.image = pygame.transform.scale(token,(2*TILE_SIZE-MARGIN*4,2*TILE_SIZE-MARGIN*4))
-    
+
+    def reset(self):
+        self.board.players[0].reset()
+        self.board.players[1].reset()  
+        self.board.players[2].reset()  
+        self.board.players[3].reset()      
+        self.board.history = []
+           
     def events(self,event):
         self.reset_button.handle_event(event)
 
     def update(self):
         self.sprite_group.update()
-
+        self.set_token()
     
     def draw(self,screen):
         screen.blit(self.surface,(BOARD_WIDTH,0))

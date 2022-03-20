@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Dict
 import pygame
 from game.constants import TILE_SIZE
@@ -25,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = position[1] * TILE_SIZE
         # set player positions
         self.position = (self.rect.x // TILE_SIZE, self.rect.y // TILE_SIZE)
-
+        self.start_position = copy(self.position)
         self.is_active = False
         # Movement
         self.player_positions = [None] * 4
@@ -113,6 +114,11 @@ class Player(pygame.sprite.Sprite):
             self.frame = (self.frame + 1) % 3
             self.image = self.animations[self.frame +
                                          3 * self.color][self.action]
+    
+    def reset(self):
+        self.position = self.start_position
+        self.rect.x = self.start_position[0]*TILE_SIZE
+        self.rect.y = self.start_position[0]*TILE_SIZE
 
     def update_positions(self):
         self.player_positions = [player.position for player in self.players]

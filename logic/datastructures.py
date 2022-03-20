@@ -4,7 +4,6 @@ from typing import Dict
 import copy
 
 from game.constants import COLS, ROWS
-from logic.ai import Data
 from logic.algorithms import *
 
 

@@ -1,6 +1,3 @@
-from logic.ai import Data
-
-
 def get_direction(start, destination):
     if destination[0] != start[0]:
         if destination[0] < start[0]:
