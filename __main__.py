@@ -55,8 +55,8 @@ def main():
     def handle_events() -> None:
         """Handles all the different events in the game"""
         for event in pygame.event.get():  # All user events
-            mouse_position = pygame.mouse.get_pos()
-            board.events(mouse_position)
+            board.events(event)
+            display.events(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()

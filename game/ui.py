@@ -1,7 +1,53 @@
+from turtle import width
 import pygame
 
 from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH
 from game.images import Images
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self, pos,width,height,first_color,second_color,first_text,second_text,size,callback):
+        super().__init__()
+        # Attributes
+        self.font =  pygame.font.Font("resources/Atarian.ttf", size)
+        self.width = width
+        self.height = height
+        self.background_1 = first_color
+        self.background_2 = second_color
+        self.text_1 = first_text
+        self.text_2 = second_text
+        self.callback = callback
+        self.is_clicked = False
+        # Sprite definitions
+        self.image = pygame.Surface((width, height))
+        self.rect = self.image.get_rect(topleft=pos)
+    
+    def draw_button(self,text,background_color,text_color):
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill((0,0,1))
+        self.image.set_colorkey((0,0,1))
+        image = self.font.render(text, True, text_color)
+        rect = pygame.Rect(
+            self.image.get_width()//8,
+            self.image.get_height()//8,
+            self.width-self.width//4,
+            self.height-self.height//4,
+        )
+        pygame.draw.rect(self.image,background_color, rect, border_radius = 10)
+        self.image.blit(image,(
+            self.image.get_width()//2-image.get_width()//2,
+            self.image.get_height()//2-image.get_height()//2)
+        )
+
+    def handle_event(self, event):
+        self.draw_button(self.text_1,(0,0,1),'White')
+     
+        if not event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.draw_button(self.text_1,'Red','Black')
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:
+                self.draw_button(self.text_2,'Green','Black')
+                if self.rect.collidepoint(event.pos):
+                    self.callback()
 
 class Counter(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -47,6 +93,7 @@ class Display():
         ai = pygame.image.load("resources/robot.png")
         ai = pygame.transform.scale(ai,(TILE_SIZE-MARGIN,TILE_SIZE-MARGIN))
         
+        
         # Create background
         self.background(self.surface,self.images)
         # Draw images on surface
@@ -57,9 +104,18 @@ class Display():
         self.surface.blit(knucles,(self.surface.get_width()//4-knucles.get_width()//2,210))        
         x = self.surface.get_width()//2+self.surface.get_width()//4
         self.surface.blit(ai,(x-ai.get_width()//2,210))
+        
+        def callback(): print("Button clicked")
+        x = BOARD_WIDTH+self.surface.get_width()//2
+        width = 120
+        height = 50
+        pos = (x-width//2,UI_HEIGHT-height-MARGIN*2)
+        self.reset_button = Button(pos,width,height,'Red','Green',"Reset","OK",30,callback)
 
         # add sprites
         self.sprite_group.add(self.token)
+
+        self.sprite_group.add(self.reset_button)
     
     def background(self,surface,images):
         E  = pygame.transform.scale(images["E-"],(2*TILE_SIZE,2*TILE_SIZE))
@@ -92,8 +148,12 @@ class Display():
         token = self.images[token]
         self.token.image = pygame.transform.scale(token,(2*TILE_SIZE-MARGIN*4,2*TILE_SIZE-MARGIN*4))
     
+    def events(self,event):
+        self.reset_button.handle_event(event)
+
     def update(self):
         self.sprite_group.update()
+
     
     def draw(self,screen):
         screen.blit(self.surface,(BOARD_WIDTH,0))
