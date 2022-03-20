@@ -1,3 +1,6 @@
+from logic.ai import Data
+
+
 def get_direction(start, destination):
     if destination[0] != start[0]:
         if destination[0] < start[0]:
@@ -36,3 +39,19 @@ def travel(graph, checktype, position):
         return travel(graph, checktype, target)
     else:
         return target
+
+
+def travel_a_star(graph, checktype, position, a_star_heuristic, nextQueue, counter):
+    target = position
+    has_next = False
+    for n in graph[position]:
+        if checktype(position, n):
+            has_next = True
+            target = n
+            if a_star_heuristic.get(target) is None:
+                a_star_heuristic[target] = counter
+                nextQueue.append(target)
+    if has_next:
+        return travel_a_star(graph, checktype, target, a_star_heuristic, nextQueue, counter)
+    else:
+        return a_star_heuristic, nextQueue
