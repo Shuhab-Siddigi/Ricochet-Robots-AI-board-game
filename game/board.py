@@ -70,8 +70,8 @@ class Board():
 
         self.players = [
             Player(self.graph, self.start_positions[0], 0),
-            Player(self.graph, self.start_positions[1], 2),
-            Player(self.graph, self.start_positions[2], 1),
+            Player(self.graph, self.start_positions[1], 0),
+            Player(self.graph, self.start_positions[2], 0),
             Player(self.graph, self.start_positions[3], 0)
         ]
 
