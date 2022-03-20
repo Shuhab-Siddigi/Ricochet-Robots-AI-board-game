@@ -51,6 +51,8 @@ def main():
     token_color = token
     goal = board.tokens[token]
 
+    print("token: ", goal)
+
     test = ai.solve("BFS", board.graph, players, token_color, goal)
 
     players[0].position = start_positions[0]
