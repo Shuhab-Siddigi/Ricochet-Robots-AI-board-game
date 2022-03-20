@@ -165,7 +165,8 @@ class Board(pygame.sprite.Group):
                 for player in self.players:
                     player.is_active = False
     
-    def events(self,mouse_position):
+    def events(self,event):
+        mouse_position = pygame.mouse.get_pos()
         if not any(player.is_walking for player in self.players):
             for player in self.players:
                 self.draw_arrows(player,mouse_position)
