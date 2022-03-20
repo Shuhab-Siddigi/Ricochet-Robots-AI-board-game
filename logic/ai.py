@@ -83,8 +83,15 @@ def GoalTest(state):
     return state[Data.activeRobot] == Data.activeToken
 
 
-def setActiveRobot():
-    Data.activeRobot = 0
+def setActiveRobot(token_color):
+    if token_color[0] == "B":
+        Data.activeRobot = 0
+    if token_color[0] == "G":
+        Data.activeRobot = 1
+    if token_color[0] == "R":
+        Data.activeRobot = 2
+    if token_color[0] == "Y":
+        Data.activeRobot = 3
 
 
 def ConstructGUIPath(finalPath):
@@ -93,10 +100,6 @@ def ConstructGUIPath(finalPath):
         for k in range(0, 4):
             if j[k] != finalPath[i + 1][k]:
                 moves.append((k, datastructures.get_direction(j[k], finalPath[i + 1][k])))
-
-    # # [(1, 1)] =humanReadable= [(player1, "left")] Sort start -> end
-    #up, down, left, right
-
     return moves
 
 
@@ -127,7 +130,6 @@ def BFS(graph):
     queue = []
     amount_of_states_considered = 0
     Data.aiGraph = datastructures.optimize_adjacency_list(graph)
-    setActiveRobot()
     queue.append(Data.startState)
     Data.parentMap[Data.startState] = None
 
@@ -163,13 +165,19 @@ def BFS(graph):
     return ConstructGUIPath(finalPath)
 
 
-def solve(algorithm, graph, players, goal):
+def a_star():
+
+    pass
+
+
+def solve(algorithm, graph, players, token_color, goal):
     if len(players) == 4:
         temp = []
         for player in players:
             temp.append(player.position)
         Data.startState = tuple(temp)
         Data.activeToken = goal
+        setActiveRobot(token_color)
 
     if algorithm == "BFS":
         print("BFS")

@@ -46,11 +46,12 @@ def main():
     commands = []
 
     token = random.choice(list(board.tokens.keys()))
+    token_color = token
     goal = board.tokens[token]
 
     # print(goal)
 
-    #commands = ai.solve("BFS", board.graph, players, goal)
+    commands = ai.solve("BFS", board.graph, players, token_color, goal)
 
     def handle_events() -> None:
         """Handles all the different events in the game"""

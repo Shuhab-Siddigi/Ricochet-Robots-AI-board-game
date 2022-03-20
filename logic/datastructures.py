@@ -118,13 +118,22 @@ def optimize_adjacency_list(graph):
     g = copy.deepcopy(graph)
     optimized_graph = Graph()
     for key in g.keys():
-        if (travel(g, check_left, key) != key):
+        if travel(g, check_left, key) != key:
             optimized_graph.add(key, travel(g, check_left, key))
-        if (travel(g, check_right, key) != key):
+        if travel(g, check_right, key) != key:
             optimized_graph.add(key, travel(g, check_right, key))
-        if (travel(g, check_up, key) != key):
+        if travel(g, check_up, key) != key:
             optimized_graph.add(key, travel(g, check_up, key))
-        if (travel(g, check_down, key) != key):
+        if travel(g, check_down, key) != key:
             optimized_graph.add(key, travel(g, check_down, key))
 
     return optimized_graph
+
+
+def get_astar_heuristic_dict(graph, goal):
+    g = copy.deepcopy(graph)
+    a_start_heuristic = {}
+
+    
+
+    return a_start_heuristic
