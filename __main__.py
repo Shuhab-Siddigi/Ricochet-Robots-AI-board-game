@@ -51,10 +51,22 @@ def main():
     token_color = token
     goal = board.tokens[token]
 
-    commands = ai.solve("BFS", board.graph, players, token_color, goal)
-    test = get_astar_heuristic_dict(board.graph, goal)
-    print("goal: ", goal)
-    pprint.pprint(test)
+    test = ai.solve("BFS", board.graph, players, token_color, goal)
+
+    players[0].position = start_positions[0]
+    players[1].position = start_positions[1]
+    players[2].position = start_positions[2]
+    players[3].position = start_positions[3]
+
+
+
+    commands = ai.solve("a_star", board.graph, players, token_color, goal)
+
+    # commands = ai.solve("BFS", board.graph, players, token_color, goal)
+    # test = get_astar_heuristic_dict(board.graph, goal)
+    # print("goal: ", goal)
+    # pprint.pprint(test)
+    # a_star
 
     def handle_events() -> None:
         """Handles all the different events in the game"""
