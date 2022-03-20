@@ -25,9 +25,9 @@ def main():
     clock = pygame.time.Clock()
     
     # Board can also be defined with prefixed values.
-    start_positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
+    positions = [(0, 0), (5, 2), (6, 4), (7, 3)]
     token = "GC"
-    board = Board(levels.Level0,positions=start_positions,token=token)
+    board = Board(levels.Level0,positions=positions,token=token)
     
     # Create a board
     #board = Board(levels.Level0)
