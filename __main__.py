@@ -35,8 +35,8 @@ def main():
     display = Display(board)
     
     # Test AI (Prefix has to be set)
-    goal = board.tokens[token]
-    board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
+    #goal = board.tokens[token]
+    #board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
     
     def handle_events() -> None:
         """Handles all the different events in the game"""

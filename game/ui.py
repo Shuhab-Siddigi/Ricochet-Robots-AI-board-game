@@ -53,7 +53,7 @@ class Button(pygame.sprite.Sprite):
 class Counter(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
-        self.font =  pygame.font.Font("resources/Atarian.ttf", 50)
+        self.font =  pygame.font.Font("resources/Atarian.ttf", 90)
         self.number = 0
         self.image = self.font.render(str(self.number), True, 'White')
         self.rect = self.image.get_rect()
@@ -91,6 +91,7 @@ class Display():
         # Images for UI 
         target_text = self.get_font("Target", 40, 'White')
         player_text = self.get_font("Player      AI  ", 32, 'White')
+        moves_text = self.get_font("Moves counter", 30, 'White')
         boarder = self.target_boarder(self.images)
         knucles = pygame.image.load("resources/knuckles.png")
         knucles = pygame.transform.scale(knucles,(TILE_SIZE,TILE_SIZE))
@@ -136,6 +137,8 @@ class Display():
         pos = (x-width//2,360)
         self.astar_button = Button(pos,width,height,'Red','Green',"A-Star","OK",30,board.a_star)
         
+        self.surface.blit(moves_text,(self.surface.get_width()//2-player_text.get_width()//2,400))
+        self.counter = Counter(BOARD_WIDTH-18+self.surface.get_width()//2,430)
 
         x = BOARD_WIDTH+self.surface.get_width()//2
         width = 120
@@ -148,6 +151,7 @@ class Display():
         self.sprite_group.add(self.reset_button)
         self.sprite_group.add(self.bfs_button)
         self.sprite_group.add(self.astar_button)
+        self.sprite_group.add(self.counter)
     
     def background(self,surface,images):
         E  = pygame.transform.scale(images["E-"],(2*TILE_SIZE,2*TILE_SIZE))
@@ -195,6 +199,7 @@ class Display():
     def update(self):
         self.sprite_group.update()
         self.set_token()
+        self.counter.number = len(self.board.history)
     
     def draw(self,screen):
         screen.blit(self.surface,(BOARD_WIDTH,0))

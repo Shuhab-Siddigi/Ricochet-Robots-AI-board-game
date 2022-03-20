@@ -224,10 +224,12 @@ class Board():
                 p.right()
 
     def a_star(self):
+        self.history = []
         goal = self.tokens[self.token]
         self.commands = ai.solve("a_star", self.graph, self.players, self.token, goal)
     
     def bfs(self):
+        self.history = []
         goal = self.tokens[self.token]
         self.commands = ai.solve("BFS", self.graph, self.players, self.token, goal)
 
