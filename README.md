@@ -3,8 +3,12 @@
 Ricochet Robots board game played by AI agent
 ### Requirements
 To be able to run the program pygame==2.1.2 is required
+    
+    pip install pygame==2.1.2
+    
 ## To run the program run __main__.py
 
+    $ python __main__.py
 ### To change the values of the board with specific prefixes.
 
      __main__.py file 
