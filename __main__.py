@@ -31,6 +31,7 @@ def main():
     
     # Test AI (Prefix has to be set) or just press button
     #goal = board.tokens[token]
+    #board.commands = ai.solve("BFS", board.graph, board.players, token, goal)
     #board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
     
     def handle_events() -> None:
