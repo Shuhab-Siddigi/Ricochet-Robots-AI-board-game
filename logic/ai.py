@@ -14,7 +14,6 @@ class Data:
     activeToken = None
 
     parentMap = dict()
-
     state_cost = dict()
 
 
@@ -125,24 +124,6 @@ def stateAlreadyExplored(state):
             return True
 
 
-def state_already_visited_a_star(state):
-    if Data.parentMap.get(state) is not None:
-        return True
-
-    # temp = list(state)
-    # active_robot_location = state[Data.activeRobot]
-    # del temp[Data.activeRobot]
-    #
-    # state_permutations = list(itertools.permutations(temp))
-    # for perm in state_permutations:
-    #     a = list(perm)
-    #     insert_at = Data.activeRobot
-    #     b = a[:]
-    #     b[insert_at:insert_at] = [active_robot_location]
-    #     if Data.parentMap.get(tuple(b)) is not None:
-    #         return True
-
-
 def BFS(graph):
     start = time.time()
     pathFound = False
@@ -187,7 +168,7 @@ def BFS(graph):
     return ConstructGUIPath(finalPath)
 
 
-def a_star2(graph):
+def a_star(graph):
     Data.aiGraph = datastructures.optimize_adjacency_list(graph)
     start = time.time()
     frontier = PriorityQueue()
@@ -236,111 +217,6 @@ def a_star2(graph):
     return ConstructGUIPath(finalPath)
 
 
-def a_star(graph):
-    start = time.time()
-    pathFound = False
-    endState = None
-    finalPath = []
-    queue = []
-    amount_of_states_considered = 0
-    Data.aiGraph = datastructures.optimize_adjacency_list(graph)
-    heuristic = datastructures.get_astar_heuristic_dict(graph, Data.activeToken)
-    queue.append((Data.startState, 0))
-    Data.parentMap[Data.startState] = None
-
-    while len(queue) != 0 and pathFound is False:
-        currentState = queue.pop(0)[0]
-        # print(currentState)
-        legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
-        # amount_of_states_considered += len(legalNewStates)
-        for state in legalNewStates:
-            cost = -1
-            if state_already_visited_a_star(state):
-                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
-                if cost >= Data.state_cost.get(state):
-                    continue
-
-            amount_of_states_considered += 1
-            if cost == -1:
-                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
-
-            Data.parentMap[state] = currentState
-            Data.state_cost[state] = cost
-            pathFound = GoalTest(state)
-            # print(" Testing ", state)
-            if pathFound:
-                endState = state
-                end = time.time()
-                print("Found goal state with ", amount_of_states_considered, " states considered")
-                print("Time elapsed:", end - start, "seconds")
-                break
-
-            # create_permutations(state, currentState)
-
-            if len(queue) == 0:
-                queue.insert(0, (state, cost))
-            else:
-                index = binary_search_recursive(queue, cost, 0, len(queue))
-                queue.insert(index, (state, cost))
-
-    finalPath.append(endState)
-    currentState = endState
-
-    while Data.parentMap.get(currentState) is not None:
-        currentState = Data.parentMap.get(currentState)
-        finalPath.insert(0, currentState)  # Is same as prepend
-
-    print("Found solution in ", len(finalPath) - 1)
-    print("\n Path: \n")
-    pprint.pprint(finalPath)
-    print(ConstructGUIPath(finalPath))
-    return ConstructGUIPath(finalPath)
-
-
-def get_depth(state):
-    counter = 0
-    currentState = state
-    while Data.parentMap.get(currentState) is not None:
-        counter += 1
-        currentState = Data.parentMap.get(currentState)
-        if counter > 14:
-            i = 1
-    return counter
-
-
-def create_permutations(state, parent):
-    temp = list(state)
-    active_robot_location = state[Data.activeRobot]
-    del temp[Data.activeRobot]
-
-    state_permutations = list(itertools.permutations(temp))
-    for perm in state_permutations:
-        a = list(perm)
-        insert_at = Data.activeRobot
-        b = a[:]
-        b[insert_at:insert_at] = [active_robot_location]
-        if Data.parentMap.get(tuple(b)) is None:
-            Data.parentMap[tuple(b)] = parent
-            Data.state_cost[tuple(b)] = Data.state_cost.get(state)
-
-
-def binary_search_recursive(array, element, start, end):
-    if start > end:
-        return start
-
-    if start == end:
-        return start
-
-    mid = (start + end) // 2
-    if element == array[mid][1]:
-        return mid
-
-    if element < array[mid][1]:
-        return binary_search_recursive(array, element, start, mid - 1)
-    else:
-        return binary_search_recursive(array, element, mid + 1, end)
-
-
 def solve(algorithm, graph, players, token_color, goal):
     if len(players) == 4:
         temp = []
@@ -356,7 +232,6 @@ def solve(algorithm, graph, players, token_color, goal):
         print("BFS")
         return BFS(graph)
 
-        # return BFS()
     if algorithm == "a_star":
         print("a_star")
-        return a_star2(graph)
+        return a_star(graph)
