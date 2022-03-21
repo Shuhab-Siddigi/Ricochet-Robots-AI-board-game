@@ -64,6 +64,7 @@ class Board():
         self.players = []
         # add objects to board
         self.arrows = pygame.sprite.Group()
+        self.last_update = pygame.time.get_ticks()
         # Commands list
         self.commands = []
         self.history = []
@@ -182,9 +183,9 @@ class Board():
     
     def draw_arrows(self,player,mouse_position):
         if player.rect.collidepoint(mouse_position):
-                [arrow.kill() for arrow in self.arrows]
-                player.is_active = True
-                self.create_arrows(player)
+            [arrow.kill() for arrow in self.arrows]
+            player.is_active = True
+            self.create_arrows(player)
 
         elif self.sprite_group.has(self.arrows) and player.is_active:
             for arrow in self.arrows:
@@ -204,6 +205,11 @@ class Board():
         elif len(self.arrows.spritedict) == 0:
                 for player in self.players:
                     player.is_active = False
+        else:
+            now = pygame.time.get_ticks()
+            if self.sprite_group.has(self.arrows) and now - self.last_update > 1500:
+                [arrow.kill() for arrow in self.arrows]
+                self.last_update = now
     
     def actions(self):
         if not any(player.is_walking for player in self.players):

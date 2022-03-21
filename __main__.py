@@ -29,7 +29,7 @@ def main():
     # Create right UI for player
     display = Display(board)
     
-    # Test AI (Prefix has to be set)
+    # Test AI (Prefix has to be set) or just press button
     #goal = board.tokens[token]
     #board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
     
