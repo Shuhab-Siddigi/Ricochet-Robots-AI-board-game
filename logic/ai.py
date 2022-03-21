@@ -1,6 +1,7 @@
 import itertools
 import pprint
 import time
+from queue import PriorityQueue
 
 from logic import datastructures
 
@@ -186,6 +187,55 @@ def BFS(graph):
     return ConstructGUIPath(finalPath)
 
 
+def a_star2(graph):
+    Data.aiGraph = datastructures.optimize_adjacency_list(graph)
+    start = time.time()
+    frontier = PriorityQueue()
+    heuristic = datastructures.get_astar_heuristic_dict(graph, Data.activeToken)
+    amount_of_states_considered = 0
+    finalPath = []
+    end_state = None
+
+    # frontier = [(Data.startState, 0)]
+    frontier.put((0, Data.startState))
+    Data.parentMap[Data.startState] = None
+    Data.state_cost[Data.startState] = 0
+
+    while frontier.not_empty:
+        current = frontier.get()[1]
+
+        if GoalTest(current):
+            end_state = current
+            end = time.time()
+            print("Found goal state with ", amount_of_states_considered, " states considered")
+            print("Time elapsed:", end - start, "seconds")
+            break
+        if Data.parentMap.get(current) is None:
+            neighbours = GetLegalMoves(current, None)
+        else:
+            neighbours = GetLegalMoves(current, Data.parentMap.get(current))
+
+        for state in neighbours:
+            new_cost = Data.state_cost[current] + 1
+            if Data.state_cost.get(state) is None or new_cost < Data.state_cost.get(state):
+                Data.state_cost[state] = new_cost
+                priority = new_cost + heuristic.get(state[Data.activeRobot])
+                frontier.put((priority, state))
+                Data.parentMap[state] = current
+                amount_of_states_considered += 1
+
+    finalPath.append(end_state)
+    while Data.parentMap.get(end_state) is not None:
+        end_state = Data.parentMap.get(end_state)
+        finalPath.insert(0, end_state)  # Is same as prepend
+
+    print("Found solution in ", len(finalPath) - 1)
+    print("\n Path: \n")
+    pprint.pprint(finalPath)
+    print(ConstructGUIPath(finalPath))
+    return ConstructGUIPath(finalPath)
+
+
 def a_star(graph):
     start = time.time()
     pathFound = False
@@ -206,13 +256,13 @@ def a_star(graph):
         for state in legalNewStates:
             cost = -1
             if state_already_visited_a_star(state):
-                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
+                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
                 if cost >= Data.state_cost.get(state):
                     continue
 
             amount_of_states_considered += 1
             if cost == -1:
-                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
+                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
 
             Data.parentMap[state] = currentState
             Data.state_cost[state] = cost
@@ -300,6 +350,7 @@ def solve(algorithm, graph, players, token_color, goal):
         Data.activeToken = goal
         setActiveRobot(token_color)
         Data.parentMap.clear()
+        Data.state_cost.clear()
 
     if algorithm == "BFS":
         print("BFS")
@@ -308,4 +359,4 @@ def solve(algorithm, graph, players, token_color, goal):
         # return BFS()
     if algorithm == "a_star":
         print("a_star")
-        return a_star(graph)
+        return a_star2(graph)
