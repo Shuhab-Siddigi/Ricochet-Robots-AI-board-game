@@ -14,7 +14,7 @@ class Data:
 
     parentMap = dict()
 
-    states_visited = dict()
+    state_cost = dict()
 
 
 def GetLegalMoves(state, parentState=None):
@@ -126,7 +126,22 @@ def stateAlreadyExplored(state):
 
 def state_already_visited_a_star(state):
 
-    return Data.states_visited.get(state)
+    if Data.parentMap.get(state) is not None:
+        return True
+
+    # temp = list(state)
+    # active_robot_location = state[Data.activeRobot]
+    # del temp[Data.activeRobot]
+    #
+    # state_permutations = list(itertools.permutations(temp))
+    #
+    # for perm in state_permutations:
+    #     a = list(perm)
+    #     insert_at = Data.activeRobot
+    #     b = a[:]
+    #     b[insert_at:insert_at] = [active_robot_location]
+    #     if Data.parentMap.get(tuple(b)) is not None:
+    #         return True
 
 def BFS(graph):
     start = time.time()
@@ -186,33 +201,29 @@ def a_star(graph):
     while len(queue) != 0 and pathFound is False:
         currentState = queue.pop(0)[0]
         # print(currentState)
-
-        pathFound = GoalTest(currentState)
-
-        if pathFound:
-            endState = currentState
-            end = time.time()
-            print("Found goal state with ", amount_of_states_considered, " states considered")
-            print("Time elapsed:", end - start, "seconds")
-            break
-
-        if state_already_visited_a_star(currentState):
-            continue
-
-        Data.states_visited[currentState] = True
         legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
         amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
-            cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
-            # pathFound = GoalTest(state)
-            # print(" Testing ", state)
+            cost = -1
+            if state_already_visited_a_star(state):
+                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
+                if cost >= Data.state_cost.get(state):
+                    continue
+
+            if cost == -1:
+                cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
             Data.parentMap[state] = currentState
-            # if pathFound:
-            #     endState = state
-            #     end = time.time()
-            #     print("Found goal state with ", amount_of_states_considered, " states considered")
-            #     print("Time elapsed:", end - start, "seconds")
-            #     break
+
+            Data.state_cost[state] = cost
+            pathFound = GoalTest(state)
+            # print(" Testing ", state)
+
+            if pathFound:
+                 endState = state
+                 end = time.time()
+                 print("Found goal state with ", amount_of_states_considered, " states considered")
+                 print("Time elapsed:", end - start, "seconds")
+                 break
 
             if len(queue) == 0:
                 queue.insert(0, (state, cost))
@@ -239,6 +250,8 @@ def get_depth(state):
     while Data.parentMap.get(currentState) is not None:
         counter += 1
         currentState = Data.parentMap.get(currentState)
+        if counter > 14:
+            i=1
     return counter
 
 def binary_search_recursive(array, element, start, end):
