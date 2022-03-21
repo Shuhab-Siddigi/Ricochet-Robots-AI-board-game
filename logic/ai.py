@@ -209,6 +209,7 @@ def a_star(graph):
                 cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
                 if cost >= Data.state_cost.get(state):
                     continue
+
             amount_of_states_considered += 1
             if cost == -1:
                 cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
@@ -224,7 +225,7 @@ def a_star(graph):
                 print("Time elapsed:", end - start, "seconds")
                 break
 
-            create_permutations(state, currentState)
+            # create_permutations(state, currentState)
 
             if len(queue) == 0:
                 queue.insert(0, (state, cost))
