@@ -14,6 +14,8 @@ class Data:
 
     parentMap = dict()
 
+    states_visited = dict()
+
 
 def GetLegalMoves(state, parentState=None):
     moves = {}
@@ -122,6 +124,10 @@ def stateAlreadyExplored(state):
             return True
 
 
+def state_already_visited_a_star(state):
+
+    return Data.states_visited.get(state)
+
 def BFS(graph):
     start = time.time()
     pathFound = False
@@ -178,26 +184,35 @@ def a_star(graph):
     Data.parentMap[Data.startState] = None
 
     while len(queue) != 0 and pathFound is False:
-        #cs = queue.pop(0)
-        currentState = queue.pop(0)
-        if Data.parentMap.get(currentState) is None:
-            legalNewStates = GetLegalMoves(currentState[0], None)
-        else:
-            legalNewStates = GetLegalMoves(currentState[0], Data.parentMap.get(currentState)[0])
+        currentState = queue.pop(0)[0]
+        # print(currentState)
+
+        pathFound = GoalTest(currentState)
+
+        if pathFound:
+            endState = currentState
+            end = time.time()
+            print("Found goal state with ", amount_of_states_considered, " states considered")
+            print("Time elapsed:", end - start, "seconds")
+            break
+
+        if state_already_visited_a_star(currentState):
+            continue
+
+        Data.states_visited[currentState] = True
+        legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
         amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
             cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState) + 1
-            pathFound = GoalTest(state)
+            # pathFound = GoalTest(state)
             # print(" Testing ", state)
-            if stateAlreadyExplored((state, cost)):
-                continue
-            Data.parentMap[(state, cost)] = currentState
-            if pathFound:
-                endState = (state, cost)
-                end = time.time()
-                print("Found goal state with ", amount_of_states_considered, " states considered")
-                print("Time elapsed:", end - start, "seconds")
-                break
+            Data.parentMap[state] = currentState
+            # if pathFound:
+            #     endState = state
+            #     end = time.time()
+            #     print("Found goal state with ", amount_of_states_considered, " states considered")
+            #     print("Time elapsed:", end - start, "seconds")
+            #     break
 
             if len(queue) == 0:
                 queue.insert(0, (state, cost))
@@ -205,12 +220,12 @@ def a_star(graph):
                 index = binary_search_recursive(queue, cost, 0, len(queue))
                 queue.insert(index, (state, cost))
 
-    finalPath.append(endState[0])
+    finalPath.append(endState)
     currentState = endState
 
     while Data.parentMap.get(currentState) is not None:
         currentState = Data.parentMap.get(currentState)
-        finalPath.insert(0, currentState[0])  # Is same as prepend
+        finalPath.insert(0, currentState)  # Is same as prepend
 
     print("Found solution in ", len(finalPath) - 1)
     print("\n Path: \n")
