@@ -82,13 +82,13 @@ def adjust_move_for_robots(state, current_player, move):
 def GoalTest(state):
     return state[Data.activeRobot] == Data.activeToken
 
-
+   
 def setActiveRobot(token_color):
-    if token_color[0] == "B":
-        Data.activeRobot = 0
-    if token_color[0] == "G":
-        Data.activeRobot = 1
     if token_color[0] == "R":
+        Data.activeRobot = 0
+    if token_color[0] == "B":
+        Data.activeRobot = 1
+    if token_color[0] == "G":
         Data.activeRobot = 2
     if token_color[0] == "Y":
         Data.activeRobot = 3

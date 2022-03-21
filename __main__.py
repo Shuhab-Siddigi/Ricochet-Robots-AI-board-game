@@ -1,5 +1,4 @@
-import pprint
-import random
+
 import sys
 
 import pygame
@@ -7,11 +6,7 @@ import pygame
 from game import levels
 from game.board import Board
 from game.constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from game.player import Player
 from game.ui import Display
-from logic import ai
-#from logic.datastructures import get_astar_heuristic_dict
-
 
 def main():
     """ Ricochet Robot AI board game """

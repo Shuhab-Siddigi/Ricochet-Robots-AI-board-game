@@ -207,7 +207,6 @@ class Board():
     
     def actions(self):
         if not any(player.is_walking for player in self.players):
-            print(self.commands)
             command = self.commands.pop(0)
             self.history.append(command)
             player = command[0]
@@ -235,17 +234,34 @@ class Board():
 
     def events(self,event):
         mouse_position = pygame.mouse.get_pos()
-        
         if not any(player.is_walking for player in self.players):
             for player in self.players:
-                
                 self.draw_arrows(player,mouse_position)
+        
+    def generate_token(self):
+        for player in self.players:
+            if player == self.players[0]:
+                if self.token[0] == "R":
+                    if  player.position == self.tokens[self.token]:
+                        self.token = random.choice(list(self.tokens.keys()))
+            if player == self.players[1]:
+                if self.token[0] == "B":
+                    if  player.position == self.tokens[self.token]:
+                        self.token = random.choice(list(self.tokens.keys()))
+            if player == self.players[2]:
+                if self.token[0] == "G":
+                    if  player.position == self.tokens[self.token]:
+                        self.token = random.choice(list(self.tokens.keys()))
+            if player == self.players[3]:
+                if self.token[0] == "Y":
+                    if  player.position == self.tokens[self.token]:
+                        self.token = random.choice(list(self.tokens.keys()))
 
     def update(self):
         self.sprite_group.update()
         if len(self.commands) != 0:
-            print(self.commands)
             self.actions()
+        self.generate_token()
     
     def draw(self,screen):
         self.sprite_group.draw(screen)
