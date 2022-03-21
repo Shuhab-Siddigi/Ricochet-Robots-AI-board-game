@@ -22,7 +22,7 @@ def main():
     # Board can also be defined with prefixed values.
     positions = [(0, 6), (15, 0), (0, 15), (13, 6)]
     token = "GC"
-    board = Board(levels.Level1,positions=positions,token=token)
+    board = Board(levels.Level0,positions=positions,token=token)
     
     # Create a board
     #board = Board(levels.Level0)

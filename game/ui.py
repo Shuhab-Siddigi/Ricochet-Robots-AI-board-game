@@ -1,4 +1,3 @@
-from turtle import width
 import pygame
 
 from game.constants import BOARD_WIDTH, MARGIN, TILE_SIZE, UI_HEIGHT, UI_WIDTH

@@ -1,4 +1,3 @@
-from math import fabs
 import random
 import pygame
 
@@ -68,7 +67,6 @@ class Board():
         # Commands list
         self.commands = []
         self.history = []
-        self.reverse = False
 
         self.players = [
             Player(self.graph, self.start_positions[0], 0),
