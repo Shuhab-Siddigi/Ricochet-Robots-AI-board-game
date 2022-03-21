@@ -84,7 +84,7 @@ def adjust_move_for_robots(state, current_player, move):
 def GoalTest(state):
     return state[Data.activeRobot] == Data.activeToken
 
-   
+
 def setActiveRobot(token_color):
     if token_color[0] == "R":
         Data.activeRobot = 0
@@ -125,7 +125,6 @@ def stateAlreadyExplored(state):
 
 
 def state_already_visited_a_star(state):
-
     if Data.parentMap.get(state) is not None:
         return True
 
@@ -134,7 +133,6 @@ def state_already_visited_a_star(state):
     # del temp[Data.activeRobot]
     #
     # state_permutations = list(itertools.permutations(temp))
-    #
     # for perm in state_permutations:
     #     a = list(perm)
     #     insert_at = Data.activeRobot
@@ -142,6 +140,7 @@ def state_already_visited_a_star(state):
     #     b[insert_at:insert_at] = [active_robot_location]
     #     if Data.parentMap.get(tuple(b)) is not None:
     #         return True
+
 
 def BFS(graph):
     start = time.time()
@@ -157,10 +156,11 @@ def BFS(graph):
     while len(queue) != 0 and pathFound is False:
         currentState = queue.pop(0)
         legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
-        amount_of_states_considered += len(legalNewStates)
+        # amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
             if stateAlreadyExplored(state):
                 continue
+            amount_of_states_considered += 1
             pathFound = GoalTest(state)
             # print(" Testing ", state)
             Data.parentMap[state] = currentState
@@ -202,28 +202,29 @@ def a_star(graph):
         currentState = queue.pop(0)[0]
         # print(currentState)
         legalNewStates = GetLegalMoves(currentState, Data.parentMap.get(currentState))
-        amount_of_states_considered += len(legalNewStates)
+        # amount_of_states_considered += len(legalNewStates)
         for state in legalNewStates:
             cost = -1
             if state_already_visited_a_star(state):
                 cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
                 if cost >= Data.state_cost.get(state):
                     continue
-
+            amount_of_states_considered += 1
             if cost == -1:
                 cost = heuristic.get(state[Data.activeRobot]) + get_depth(currentState)
-            Data.parentMap[state] = currentState
 
+            Data.parentMap[state] = currentState
             Data.state_cost[state] = cost
             pathFound = GoalTest(state)
             # print(" Testing ", state)
-
             if pathFound:
-                 endState = state
-                 end = time.time()
-                 print("Found goal state with ", amount_of_states_considered, " states considered")
-                 print("Time elapsed:", end - start, "seconds")
-                 break
+                endState = state
+                end = time.time()
+                print("Found goal state with ", amount_of_states_considered, " states considered")
+                print("Time elapsed:", end - start, "seconds")
+                break
+
+            create_permutations(state, currentState)
 
             if len(queue) == 0:
                 queue.insert(0, (state, cost))
@@ -244,6 +245,7 @@ def a_star(graph):
     print(ConstructGUIPath(finalPath))
     return ConstructGUIPath(finalPath)
 
+
 def get_depth(state):
     counter = 0
     currentState = state
@@ -251,8 +253,25 @@ def get_depth(state):
         counter += 1
         currentState = Data.parentMap.get(currentState)
         if counter > 14:
-            i=1
+            i = 1
     return counter
+
+
+def create_permutations(state, parent):
+    temp = list(state)
+    active_robot_location = state[Data.activeRobot]
+    del temp[Data.activeRobot]
+
+    state_permutations = list(itertools.permutations(temp))
+    for perm in state_permutations:
+        a = list(perm)
+        insert_at = Data.activeRobot
+        b = a[:]
+        b[insert_at:insert_at] = [active_robot_location]
+        if Data.parentMap.get(tuple(b)) is None:
+            Data.parentMap[tuple(b)] = parent
+            Data.state_cost[tuple(b)] = Data.state_cost.get(state)
+
 
 def binary_search_recursive(array, element, start, end):
     if start > end:
@@ -266,9 +285,10 @@ def binary_search_recursive(array, element, start, end):
         return mid
 
     if element < array[mid][1]:
-        return binary_search_recursive(array, element, start, mid-1)
+        return binary_search_recursive(array, element, start, mid - 1)
     else:
-        return binary_search_recursive(array, element, mid+1, end)
+        return binary_search_recursive(array, element, mid + 1, end)
+
 
 def solve(algorithm, graph, players, token_color, goal):
     if len(players) == 4:
