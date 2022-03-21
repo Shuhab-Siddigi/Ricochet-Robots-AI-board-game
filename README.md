@@ -22,13 +22,14 @@ To be able to run the program pygame==2.1.2 is required
 	34 board.commands = ai.solve("a_star", board.graph, board.players, token, goal)
 
 ### Test scenarios
-To run please change the values in the main file.
-Scenario 1
-Positions (0, 6), (15, 0), (0, 15), (13, 6)
-Token: “GC”
-Level: Level0
+### To run please change the values in the main file.
 
-Scenario 2
-Positions: (0,6), (15, 0), (0, 15), (13, 6)
-Token: “GC”
-Level: Level1
+    Scenario 1
+    Positions (0, 6), (15, 0), (0, 15), (13, 6)
+    Token: “GC”
+    Level: Level0
+
+    Scenario 2
+    Positions: (0,6), (15, 0), (0, 15), (13, 6)
+    Token: “GC”
+    Level: Level1
